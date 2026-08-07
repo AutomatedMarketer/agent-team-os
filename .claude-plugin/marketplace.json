@@ -1,0 +1,14 @@
+{
+  "name": "agent-team-os",
+  "owner": {
+    "name": "Nuno Tavares"
+  },
+  "description": "Build and run your own AI agent team. Scaffolds a team repo with an orchestrator and five agents, walks you through a resumable 9-phase install, and audits the result. Level 2 of The Claude Code Workshop.",
+  "plugins": [
+    {
+      "name": "agent-team-os",
+      "source": "./agent-team-os",
+      "description": "Hire workers, not tools. /onboard builds your team repo end to end in nine resumable phases. /new-agent adds a specialist. /add-pack installs a ready-made one. /audit tells you what is working, what is stale, and what was never set up."
+    }
+  ]
+}
