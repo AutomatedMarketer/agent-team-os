@@ -30,33 +30,42 @@ brief that is about their business and a brief that could be about anybody's.
 
 | Gate | What counts | What does not |
 |---|---|---|
-| **One real number** | A figure they can point at **right now**, and where it came from | A number they thought of to answer the question |
+| **One real source** | A named report, on a named day, from a named person — *"flash report, Thursdays, from Denise"* | A figure recited from memory. See below |
 | **One real name** | A person on their team, and what that person owns | "the ops team", "my assistant" |
 | **One real stuck thing** | Something that has genuinely not moved, and roughly how long | "we should probably improve marketing" |
 
-### The number gate has a trap in it — read this
+### The number gate has a trap in it — read this twice
 
-If you press for a number while they are in a room, on the clock, they will **make one up**.
-A brief built on an invented figure is worse than a brief with no figure, because they cannot
-tell later which is which.
+The obvious version of this gate fails, and it fails on the most confident person in the room.
 
-So ask it like this:
+If you ask *"what's your revenue?"* and offer *"I don't have that to hand"* as the escape,
+you catch the person who admits it. **You do not catch the proud one** — and a CEO in a room,
+with their coach beside them, is proud. They will give you a real-sounding figure that is
+twelve months stale or half-remembered from a report they skimmed. Nobody in the room can
+detect it, including them. That number then sits in the repo forever, wrong, and every figure
+downstream inherits its authority.
 
-> *"What's your revenue this month — a figure you could point at right now, not one you'd
-> have to work out?"*
+**So do not ask for the number. Ask for the report.**
 
-And accept this, warmly, as a complete answer:
+> **"What report already lands on your desk, and what day does it land?"**
 
-> *"I don't have that to hand."*
+*"Flash report, Thursdays, from Denise."* That is a far better answer than any figure, because:
 
-Then write **not measured** in the file, and note what would supply it. **That is a pass, not
-a fail.** Say so out loud:
+- Nobody is embarrassed by it. There is no admission in it
+- It is **true every week**, not true once
+- It names the source, so the brief can tag where the number came from
+- It tells you what to ask for next week
 
-> *"Good — that's the right answer. It'll say 'not measured' rather than guess, and it'll
-> tell you every week exactly what it needs. That's the difference between this and something
-> that makes things up."*
+Only after they name the report do you ask what the latest one said — and if they cannot
+remember, **that is fine and expected**, because now you know where it comes from.
 
-The gate is testing **specificity**, not the presence of a digit.
+If there is no report at all for a metric, write **not measured** and name the report that
+would supply it. Say so warmly:
+
+> *"Good — it'll say 'not measured' rather than guess, and it'll tell you every Monday what
+> would fix it. That's the difference between this and something that makes things up."*
+
+The gate tests **whether the number has a source**, not whether they can produce a digit.
 
 ---
 
@@ -80,8 +89,11 @@ a limitation.
 
 If they name eight, ask which three they would keep. Choosing is the value.
 
-**5. Current value for those three.** **[gate — the number]**
-Use the wording above. Take "not to hand" for any or all of them.
+**5. Where those numbers come from.** **[gate — the source]**
+> *"For each of those — what report already lands on your desk, and what day?"*
+
+Get the report, the day, and the person. Then, and only then: *"and what did the last one
+say?"* Not remembering is fine — you have the source, which is the durable thing.
 
 **6. What's broken right now.** **[gate — the stuck thing]**
 > *"What's the thing in this business that hasn't moved in weeks?"*
