@@ -45,7 +45,7 @@ check makes concrete.
 | # | Phase | File | What happens | Time |
 |---|---|---|---|---|
 | 1 | Pre-flight | `phases/01-preflight.md` | Confirm plan, web access, GitHub, Google | 10 min |
-| 2 | The repo | `phases/02-repo.md` | Create their team repo from the template and push it | 20 min |
+| 2 | The repo | `phases/02-repo.md` | Create their team repo from the template and push it, then install and prove the starter stack | 25 min |
 | 3 | About me | `phases/03-about-me.md` | Fill `shared/about-me.md` | 15 min |
 | 4 | Business brain | `phases/04-business-brain.md` | Fill `shared/business-brain.md` | 20 min |
 | 5 | Voice | `phases/05-writing-rules.md` | Fill `shared/writing-rules.md`, including real samples | 15 min |
