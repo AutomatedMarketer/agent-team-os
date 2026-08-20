@@ -6,15 +6,17 @@ a new machine, and a cloud run. Do not delete it until the install is complete.
 ```yaml
 install_complete: false
 oversight_complete: false
+standard_complete: false
 last_completed_phase: 0
 next_phase: 1
 repo_url: ""
 started: ""
 ```
 
-`install_complete` covers the core install, phases 1–9. `oversight_complete` covers the
-two stages after it, phases 10–11. A state file written before those stages existed has
-neither the key nor rows 10–11 below — the installer adds them and resumes at phase 10.
+`install_complete` covers the core install, phases 1–9. `oversight_complete` covers phases
+10–11, and `standard_complete` covers phase 12. A state file written before a stage existed
+has neither its key nor its rows below — the installer appends them and resumes at the first
+missing phase. Nothing already built is ever replaced.
 
 | # | Phase | Stage | Status | Finished |
 |---|---|---|---|---|
@@ -29,6 +31,7 @@ neither the key nor rows 10–11 below — the installer adds them and resumes a
 | 9 | Verify | 3 · Training | pending | |
 | 10 | Workflows | 4 · Workflows | pending | |
 | 11 | Oversight | 5 · Oversight | pending | |
+| 12 | The standard | 6 · Improvement | pending | |
 
 Status is one of `pending`, `in-progress`, `done`, `skipped`.
 

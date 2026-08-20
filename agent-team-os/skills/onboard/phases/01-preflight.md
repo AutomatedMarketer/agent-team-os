@@ -5,7 +5,7 @@
 
 ## Open with
 
-> "Phase 1 of 11. Before we build anything, four quick checks. If one of them fails we stop
+> "Phase 1 of 12. Before we build anything, four quick checks. If one of them fails we stop
 > here and fix it — it is much cheaper than finding out in phase 8."
 
 ## The four checks

@@ -10,7 +10,7 @@ technical — the bookmark at the end is not a nicety, it is the retention step.
 
 ## Open with
 
-> "Phase 11 of 11: oversight. Your team runs whether you watch or not. This gives you the
+> "Phase 11 of 12: oversight. Your team runs whether you watch or not. This gives you the
 > window to watch through — five screens, on your phone, at a URL you own. Half an hour,
 > and the last step happens on your phone, not your laptop."
 
@@ -127,12 +127,21 @@ give it a beat before closing out.
 
 ```bash
 git add .agent-team/
-git commit -m "onboard: phase 11, oversight — install complete"
+git commit -m "onboard: phase 11, oversight"
 git push
 ```
 
 Set `install_complete: true` and `oversight_complete: true` in
-`.agent-team/onboarding-state.md`, then follow the finishing steps in the skill file.
+`.agent-team/onboarding-state.md`.
+
+One phase left, and it is the one that keeps this alive past month one:
+
+> "Your team runs and you can watch it from your phone. The last phase is the one that makes
+> it get better instead of just staying busy — your own standard, in your words, and a weekly
+> check that keeps everything current. Twenty-five minutes. Continue to phase 12, or pause?"
+
+Do not run the finishing steps in the skill file here — those close the install after phase
+12.
 
 ## If it goes wrong
 

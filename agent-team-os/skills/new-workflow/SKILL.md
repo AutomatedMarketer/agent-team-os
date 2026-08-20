@@ -23,6 +23,23 @@ question is answered against what actually exists. Then ask, one at a time:
 | 3 | "Which agent owns it?" | Becomes `owner`. One of the agents in `.claude/agents/`. Default to whichever agent already does the closest work. |
 | 4 | "When should it run — a time, a day, or only when you press the button?" | Becomes `trigger`. |
 | 5 | "Where should the result land so you actually read it?" | Becomes `output`. Default `inbox/{date}/<slug>.md` and say why: unique filenames never collide across machines. |
+| 6 | "Will a person read what this makes, or is it just data for another job?" | Decides whether it gets graded. A person reads it, so it ends in `review-draft` and needs a standard - go to the three questions below. |
+
+### If a person reads it, get the standard
+
+Skip this only when the output is raw material for another workflow. Three questions, one at
+a time, and **write their answers down verbatim** - taste does not survive being tidied into
+house style:
+
+1. **"When this job produces something good enough to use as-is, what does that look like?
+   One sentence."** -> `looks_like`
+2. **"What has to be in it every single time?"** -> `must_have`. Stop them at five; eight
+   means it is two jobs, and say so.
+3. **"What makes you delete it on sight?"** -> `never`. If they stall, ask what they took
+   out of the last thing they rewrote. Do not offer examples - examples get agreed with.
+
+Without this block a graded workflow has no standard to be graded against, and the repo's
+own tests will fail it.
 
 If they stall on question 1 or 2, the five unstick questions, one at a time:
 
@@ -54,16 +71,25 @@ Create `workflows/<slug>.yml` — kebab-case slug, matching the contract in
 ```yaml
 name: Monday Brief
 owner: research
-steps: [pull-calendar, scan-inbox, write-brief]
+steps: [pull-calendar, scan-inbox, write-brief, review-draft]
 trigger:
   schedule: "weekly mon 06:00"
   fire: true
 output: inbox/{date}/monday-brief.md
+done:
+  looks_like: "<their sentence, verbatim>"
+  must_have: [<their list, verbatim>]
+  never: [<their list, verbatim>]
 ```
 
-Then read it back in one plain sentence: "Every Monday at six, Research pulls your
-calendar, scans your inbox, and writes a brief into that day's inbox folder. There is also
-a button." Wait for a `go` before registering anything.
+`review-draft` is always the **last** step, and it only appears alongside a `done` block -
+the two ship together or neither does.
+
+Then read it back in one plain sentence, including what happens when it falls short: "Every
+Monday at six, Research pulls your calendar, scans your inbox, and writes a brief into that
+day's inbox folder. Your editor checks it against your standard first - if it misses, it
+goes back once with the fix, and if it misses again you still get it, marked, with the
+reason. There is also a button." Wait for a `go` before registering anything.
 
 ## Check
 
