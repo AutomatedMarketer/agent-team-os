@@ -130,8 +130,15 @@ Workflows, Agents, Overnight. The user picks up to four more from `tiles/catalog
 - Ask the catalogue's own questions, one at a time — "Where does the money show up?",
   "Where do your leads live?" — and only for tiles whose question they answer with a real
   tool. A tile with nothing wired behind it renders an empty box.
+- **Wiring check before you write a choice down:** if the tile's catalogue entry names a
+  connection (`requires`, an api-doc, a CLI), it only earns its place when that connection
+  was set up in phase 6 — look in the repo, don't ask them to remember. If it isn't there,
+  say so and steer to a wiring-free tile (memory, workflows, runs) instead. Better two
+  tiles that fill than four boxes that sit empty.
 - Ask for the hero: "One number at the top of your home screen. What do you want it to
-  be?" Write its `id` from the catalogue into `hero:`.
+  be?" Turn their answer into a short kebab-case id — `hours-saved`, `posts-shipped`,
+  `deals-open` — and write it into `hero:`. **The hero does not come from the catalogue**;
+  it is their number, named in their words.
 - Write their choices into `tiles.yml` yourself. Cap is four; fewer is fine.
 
 ### 7. Retire the empty-board guard
