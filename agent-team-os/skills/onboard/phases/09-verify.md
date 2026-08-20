@@ -6,7 +6,7 @@ and a user who can explain what they own.
 
 ## Open with
 
-> "Phase 9 of 11. We check the core install here — after this, what's left is the good
+> "Phase 9 of 12. We check the core install here — after this, what's left is the good
 > part: workflows and your dashboard."
 
 ## Steps

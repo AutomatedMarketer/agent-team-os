@@ -10,7 +10,7 @@ result landing somewhere the user will actually find it.
 
 ## Open with
 
-> "Phase 10 of 11: workflows. Up to now, everything your team does starts with you asking.
+> "Phase 10 of 12: workflows. Up to now, everything your team does starts with you asking.
 > This phase chains your skills into named jobs that run on their own. Laptop closed,
 > something still happens. About forty minutes."
 
