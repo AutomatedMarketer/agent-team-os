@@ -1,6 +1,6 @@
 ---
 name: onboard
-description: Builds the user's AI agent team repo across nine resumable phases. Reads the state file to know where they are, runs the current phase, updates state, and offers to continue or pause. Trigger on /onboard, start onboarding, continue onboarding, or where am I in onboarding.
+description: Builds the user's AI agent team repo across eleven resumable phases covering five stages — Brief, Access, Training, Workflows, Oversight. Reads the state file to know where they are, runs the current phase, updates state, and offers to continue or pause. Trigger on /onboard, start onboarding, continue onboarding, or where am I in onboarding.
 ---
 
 # Onboard — the agent team installer
@@ -28,7 +28,18 @@ repo and nothing else. A file on the user's laptop cannot be read by an agent ru
 Say this out loud once, in phase 2, in those words. It is the single idea that makes the
 rest of the course make sense.
 
-## The nine phases
+## The five stages, in eleven phases
+
+The install climbs five stages. Each stage has a plain-English "done when" that a phase
+check makes concrete.
+
+| Stage | Phases | Done when |
+|---|---|---|
+| 1 · Brief | 1–5 | A cold session answers "what does this business do?" with nothing pasted in |
+| 2 · Access | 6 | "What's on my calendar tomorrow?" returns live data |
+| 3 · Training | 7–9 | A short phrase produces a real artifact, on a schedule |
+| 4 · Workflows | 10 | Laptop closed, something happens |
+| 5 · Oversight | 11 | A job dispatched from their phone, watched to the end |
 
 | # | Phase | File | What happens | Time |
 |---|---|---|---|---|
@@ -41,13 +52,15 @@ rest of the course make sense.
 | 7 | Meet the team | `phases/07-meet-the-team.md` | Run the Research agent by hand, read its output | 20 min |
 | 8 | First routine | `phases/08-first-routine.md` | Schedule Research, Run now to prove it | 20 min |
 | 9 | Verify | `phases/09-verify.md` | Run `/audit`, read the self-check | 15 min |
+| 10 | Workflows | `phases/10-workflows.md` | Chain skills into named jobs, schedule them, pick the board | 40 min |
+| 11 | Oversight | `phases/11-oversight.md` | Deploy the dashboard, wire the buttons, phone bookmark | 30 min |
 
-Roughly two and a half hours of work, deliberately split so that nobody has to do it in one
-sitting.
+Roughly three and a half hours of work, deliberately split so that nobody has to do it in
+one sitting.
 
 ## How to drive each phase
 
-1. **Greet briefly.** "Phase 4 of 9: your business brain. About 20 minutes. Ready?" Wait
+1. **Greet briefly.** "Phase 4 of 11: your business brain. About 20 minutes. Ready?" Wait
    for `yes`, `go`, or `start`.
 2. **Read the phase file in full** before you say anything else.
 3. **Run it exactly.** One question at a time. Never two.
@@ -61,14 +74,20 @@ sitting.
 When this skill fires:
 
 1. Read the state file.
-2. If `install_complete: true`, say so and suggest `/audit`. Stop.
-3. If `next_phase` is 1 with no progress, start fresh.
-4. Otherwise: "You are on phase N of 9. Last time we finished [phase name]. Ready to keep
+2. If `install_complete: true` and phases 10 and 11 are both `done` or `skipped`, say so
+   and suggest `/audit`. Stop.
+3. **If the state file only lists nine phases**, it was written before stages 4 and 5
+   existed. Append rows 10 (Workflows, `pending`) and 11 (Oversight, `pending`) to its
+   table, leave every existing line exactly as it is, set `next_phase: 10`, and say: "Your
+   core install is done. Two new stages have shipped since — workflows and the dashboard.
+   Ready for phase 10?" Nothing they built gets replaced; these stages only add.
+4. If `next_phase` is 1 with no progress, start fresh.
+5. Otherwise: "You are on phase N of 11. Last time we finished [phase name]. Ready to keep
    going?" Wait, then run phase N.
-5. `show progress` prints the state file as a complete / in-progress / pending list.
-6. `redo phase X` asks "This overwrites what phase X built. Sure? (yes / no)", waits for
+6. `show progress` prints the state file as a complete / in-progress / pending list.
+7. `redo phase X` asks "This overwrites what phase X built. Sure? (yes / no)", waits for
    `yes`, then re-runs it.
-7. `skip phase X` states the consequence first — "Skipping connectors means the email agent
+8. `skip phase X` states the consequence first — "Skipping connectors means the email agent
    has no inbox to read, so phase 7 will only cover Research. Sure?" — then marks it
    `skipped`.
 
@@ -80,8 +99,11 @@ not pass its check does not advance.
 
 ## Secrets
 
-Never ask for an API key, a token, or a password. Nothing in this install needs one.
-Connectors are authorised by signing in, in the browser, on the user's own account.
+Never ask for an API key, a token, or a password. Nothing in this install passes one
+through this chat: the two that exist at all (the read-only GitHub token and the fire key
+in phase 11) are minted by the user and typed straight into Vercel's settings form, never
+shown to you. Connectors are authorised by signing in, in the browser, on the user's own
+account.
 
 If a user pastes a secret anyway: tell them to rotate it, do not repeat the value back, and
 do not write it to any file.
@@ -98,11 +120,15 @@ do not write it to any file.
 
 ## When the install finishes
 
-After phase 9:
+Phase 9 closes the core install: it sets `install_complete: true`, and the journey carries
+straight on into phase 10. The install as a whole finishes after phase 11:
 
 1. Run the `audit` skill and save its report to `.agent-team/audit-log.md`.
-2. Set `install_complete: true` in the state file.
+2. Set `oversight_complete: true` in the state file (`install_complete` was set in
+   phase 9).
 3. Commit and push.
-4. Tell them, in plain English: "Your team is live. Tomorrow morning, open
-   `agents/research/output/` and read what it did while you were asleep."
-5. Point at the next thing: phase 2 of the course adds the Content and Email agents.
+4. Tell them, in plain English: "Your team is live, and so is your window onto it.
+   Tomorrow morning, before you open your laptop, open the dashboard on your phone and
+   read what happened overnight."
+5. Point at the next thing: `/new-workflow` any time a new job earns a name, `/new-agent`
+   when a job needs a specialist that does not exist yet.

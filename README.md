@@ -25,16 +25,35 @@ Then:
 /onboard
 ```
 
-Nine phases, about two and a half hours of work, resumable at every boundary. Stop after
-any phase, close your laptop, come back next week and type `continue onboarding`.
+Eleven phases across five stages, about three and a half hours of work, resumable at every
+boundary. Stop after any phase, close your laptop, come back next week and type
+`continue onboarding`.
+
+## The five stages
+
+| Stage | You answer | You end up with |
+|---|---|---|
+| 1 · Brief | Twenty minutes of talking about the business | A repo that knows your business cold |
+| 2 · Access | Which tools do you live in? | Live calendar and inbox data |
+| 3 · Training | What do you actually do all week? | Agents producing real artifacts on a schedule |
+| 4 · Workflows | Which of those run together, and when? | Named jobs that run with your laptop closed |
+| 5 · Oversight | — | The dashboard on your phone, dispatch from anywhere |
+
+Stage 4 is the product. A skill is a verb; a workflow is a job. Everyone else stops at a
+pile of skills — this chains them into named jobs with a schedule, a button, and a visible
+status.
+
+If you finished the original nine-phase install, run `/onboard` again — it recognises the
+older state file and resumes straight into stage 4. Nothing gets replaced.
 
 ## What it gives you
 
 | Command | Does |
 |---|---|
-| `/onboard` | Builds the whole team, from an empty GitHub account to a scheduled agent |
+| `/onboard` | Builds the whole team, from an empty GitHub account to a dashboard on your phone |
 | `/audit` | Tells you what is working, what is stale, and what was never set up |
 | `/new-agent` | Adds a specialist, written to the same standard as the five that ship |
+| `/new-workflow` | Turns a conversation into a named job — chained skills, a schedule, a button |
 | `/add-pack` | Installs a ready-made pack and checks it broke nothing |
 
 ## The five agents

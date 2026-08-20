@@ -5,23 +5,30 @@ a new machine, and a cloud run. Do not delete it until the install is complete.
 
 ```yaml
 install_complete: false
+oversight_complete: false
 last_completed_phase: 0
 next_phase: 1
 repo_url: ""
 started: ""
 ```
 
-| # | Phase | Status | Finished |
-|---|---|---|---|
-| 1 | Pre-flight | pending | |
-| 2 | The repo | pending | |
-| 3 | About me | pending | |
-| 4 | Business brain | pending | |
-| 5 | Voice | pending | |
-| 6 | Connectors | pending | |
-| 7 | Meet the team | pending | |
-| 8 | First routine | pending | |
-| 9 | Verify | pending | |
+`install_complete` covers the core install, phases 1–9. `oversight_complete` covers the
+two stages after it, phases 10–11. A state file written before those stages existed has
+neither the key nor rows 10–11 below — the installer adds them and resumes at phase 10.
+
+| # | Phase | Stage | Status | Finished |
+|---|---|---|---|---|
+| 1 | Pre-flight | 1 · Brief | pending | |
+| 2 | The repo | 1 · Brief | pending | |
+| 3 | About me | 1 · Brief | pending | |
+| 4 | Business brain | 1 · Brief | pending | |
+| 5 | Voice | 1 · Brief | pending | |
+| 6 | Connectors | 2 · Access | pending | |
+| 7 | Meet the team | 3 · Training | pending | |
+| 8 | First routine | 3 · Training | pending | |
+| 9 | Verify | 3 · Training | pending | |
+| 10 | Workflows | 4 · Workflows | pending | |
+| 11 | Oversight | 5 · Oversight | pending | |
 
 Status is one of `pending`, `in-progress`, `done`, `skipped`.
 

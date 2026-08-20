@@ -6,7 +6,7 @@ the repo that the user did not write.
 
 ## Open with
 
-> "Phase 8 of 9. This is the one. After this, your team works when you are not there."
+> "Phase 8 of 11. This is the one. After this, your team works when you are not there."
 
 ## The thing you cannot demonstrate live
 

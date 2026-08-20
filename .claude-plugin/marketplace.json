@@ -3,12 +3,12 @@
   "owner": {
     "name": "Nuno Tavares"
   },
-  "description": "Build and run your own AI agent team. /onboard scaffolds a marketing team in nine resumable phases; /onboard-ceo scaffolds a CEO team that produces a Monday Brief. Plus /new-agent, /add-pack and /audit. Level 2 of The Claude Code Workshop.",
+  "description": "Build and run your own AI agent team. /onboard scaffolds a marketing team in eleven resumable phases across five stages, ending with workflows on schedules and a dashboard on your phone; /onboard-ceo scaffolds a CEO team that produces a Monday Brief. Plus /new-agent, /new-workflow, /add-pack and /audit. Level 2 of The Claude Code Workshop.",
   "plugins": [
     {
       "name": "agent-team-os",
       "source": "./agent-team-os",
-      "description": "Hire workers, not tools. /onboard builds your marketing team repo end to end in nine resumable phases. /onboard-ceo builds a CEO team in six, ending with a Monday Brief written by a scheduled run. /new-agent adds a specialist. /add-pack installs a ready-made one. /audit tells you what is working, what is stale, and what was never set up."
+      "description": "Hire workers, not tools. /onboard builds your marketing team repo end to end in eleven resumable phases across five stages, from a blank GitHub account to a dashboard on your phone. /onboard-ceo builds a CEO team in six, ending with a Monday Brief written by a scheduled run. /new-agent adds a specialist. /new-workflow turns a conversation into a named, scheduled job. /add-pack installs a ready-made one. /audit tells you what is working, what is stale, and what was never set up."
     }
   ]
 }

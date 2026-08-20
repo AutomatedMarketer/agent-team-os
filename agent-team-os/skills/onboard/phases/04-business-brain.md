@@ -5,7 +5,7 @@
 
 ## Open with
 
-> "Phase 4 of 9. Eight questions about the business. This is the file that decides whether
+> "Phase 4 of 11. Eight questions about the business. This is the file that decides whether
 > your agents produce something you could actually send, or generic filler."
 
 ## The questions

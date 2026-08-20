@@ -6,7 +6,7 @@ writing samples.
 
 ## Open with
 
-> "Phase 5 of 9. This is the shortest phase and the one that changes the output most. Three
+> "Phase 5 of 11. This is the shortest phase and the one that changes the output most. Three
 > real things you have written beat any description of how you write."
 
 ## The questions

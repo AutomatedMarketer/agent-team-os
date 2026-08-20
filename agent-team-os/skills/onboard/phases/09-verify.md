@@ -6,7 +6,8 @@ and a user who can explain what they own.
 
 ## Open with
 
-> "Phase 9 of 9. We check the work, then I get out of your way."
+> "Phase 9 of 11. We check the core install here — after this, what's left is the good
+> part: workflows and your dashboard."
 
 ## Steps
 
@@ -54,12 +55,16 @@ Set `install_complete: true` in `.agent-team/onboarding-state.md`.
 ## Check
 
 - `.agent-team/audit-log.md` exists and is committed
-- `.agent-team/onboarding-state.md` shows all nine phases `done` or `skipped`
+- `.agent-team/onboarding-state.md` shows phases 1 through 9 `done` or `skipped`
 - At least one routine exists with a schedule
 - At least one commit was authored by an agent, not the user
 - They answered all three questions
 
 ## What next
 
-> "You have one agent working. The course adds four more, then a dashboard at your own URL.
-> Nothing you have built gets replaced — it gets added to."
+> "You have one agent working, and the core install is done. Two stages remain: phase 10
+> chains your skills into named jobs that run on their own, and phase 11 puts the whole
+> team on your phone. Nothing you have built gets replaced — it gets added to."
+
+Then the usual boundary: "Continue to phase 10, or pause? (Type **continue** or
+**pause**.)"

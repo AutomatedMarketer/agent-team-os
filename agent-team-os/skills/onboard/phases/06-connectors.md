@@ -6,7 +6,7 @@ note of what each one can reach.
 
 ## Open with
 
-> "Phase 6 of 9. Your agents can read the web already. This gives them your inbox and your
+> "Phase 6 of 11. Your agents can read the web already. This gives them your inbox and your
 > calendar. Twenty minutes, and most of it is clicking Allow."
 
 ## Why connectors and not keys

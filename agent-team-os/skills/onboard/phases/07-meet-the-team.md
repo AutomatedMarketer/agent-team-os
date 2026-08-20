@@ -6,7 +6,7 @@ both committed, and the user having watched the orchestrator delegate.
 
 ## Open with
 
-> "Phase 7 of 9. Your team is built. Let's make one of them work, by hand, while you watch.
+> "Phase 7 of 11. Your team is built. Let's make one of them work, by hand, while you watch.
 > Research first, because it needs nothing set up."
 
 ## Steps

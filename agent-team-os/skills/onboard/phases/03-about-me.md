@@ -5,7 +5,7 @@
 
 ## Open with
 
-> "Phase 3 of 9. Five questions about you, not your business. Your agents read this before
+> "Phase 3 of 11. Five questions about you, not your business. Your agents read this before
 > every job, so it decides whether they sound like a stranger or like your colleague."
 
 ## The questions
