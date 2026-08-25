@@ -63,19 +63,24 @@ Then: "Open the repo in your browser. Do you see it?"
 The repo exists, so its `stack.yml` can be read. Run the `install-stack` skill now, before
 anything else is built.
 
-> "One more thing and it is the most important five minutes of the install. Four things
+> "One more thing and it is the most important five minutes of the install. Five things
 > every team gets: a way to find out what people are actually saying this month, a way to
 > read official documentation instead of guessing at it, a memory that survives you closing
-> the window, and an honest account of what this is costing you. I'll put them in and prove
-> each one works."
+> the window, an honest account of what this is costing you, and a way to spend the part of
+> your subscription you'd otherwise throw away each week. I'll put them in and prove each
+> one works."
 
 Follow `.claude/skills/install-stack/SKILL.md` exactly. It is safe to run twice, so a repeat
 later costs nothing.
 
-Two things to hold to here:
+Three things to hold to here:
 
 - **Show each proof.** An installed plugin is not a working plugin, and the one that matters
   most is `last30days` coming back with **recent dates**. Let them see the dates.
+- **Calibrate the surplus burn to *this* owner.** Their weekly reset is not yours and not the
+  template's. Run the probe (step 4b of the skill); if it cannot read the account, have them
+  open `claude.ai/settings/usage` and read the reset line to you. Write it into
+  `.claude/skills/surplus-burn/config.json` and prove it back with `surplus-check.mjs`.
 - **Some of these load on the next session.** Say which, plainly, so a capability that is not
   answering yet does not read as a broken install.
 
@@ -96,6 +101,8 @@ Then say the sentence that makes the rest of the install make sense:
 - `git status` is clean
 - `.agent-team/stack-check.md` exists, and every capability in it is either verified or has
   a named reason and a fallback
+- `.claude/skills/surplus-burn/config.json` has a real `resetWeekday` and `resetHour` for
+  this owner — not `null`, not copied
 
 Write the repo URL into the state file's `repo_url`.
 
