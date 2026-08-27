@@ -1,0 +1,13 @@
+{
+  "name": "agent-team-os",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The plugin that builds and runs an AI agent team. Tests cover the deterministic helpers its skills shell out to.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}
