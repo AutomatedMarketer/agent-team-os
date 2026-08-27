@@ -94,6 +94,27 @@ Then say the sentence that makes the rest of the install make sense:
 > tool, a price, or a version is something it checks — because that is the difference
 > between an assistant that is confident and one that is right."
 
+## Then measure the week, before anything gets tailored
+
+The repo now exists, which is the only thing `/ledger` was waiting for. Run it here, before
+a single agent, job or connector is touched:
+
+```
+/ledger
+```
+
+About 25 minutes. It asks where their week actually goes and writes `ledger.yml` — what they
+do, how often, how long it takes, and who acts on the result. It recommends nothing.
+
+Say why the order is this way, once, in these words:
+
+> "Everything after this gets decided by that file. Which jobs get switched on, which of your
+> team matter, what still has to be built. So we measure the week before we build anything —
+> because a wrong number here is obvious to you, and a wrong list of agents is not."
+
+Do not continue to phase 3 until `npm run check:ledger` exits clean and the owner has said the
+week reads right. That agreement is the gate, not the file existing.
+
 ## Check
 
 - `gh repo view --web` opens a page that exists
@@ -103,6 +124,8 @@ Then say the sentence that makes the rest of the install make sense:
   a named reason and a fallback
 - `.claude/skills/surplus-burn/config.json` has a real `resetWeekday` and `resetHour` for
   this owner — not `null`, not copied
+- `ledger.yml` exists and is committed, `npm run check:ledger` exits clean, and **the owner has
+  said out loud that the week reads right**
 
 Write the repo URL into the state file's `repo_url`.
 

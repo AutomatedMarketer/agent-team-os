@@ -45,7 +45,7 @@ check makes concrete.
 | # | Phase | File | What happens | Time |
 |---|---|---|---|---|
 | 1 | Pre-flight | `phases/01-preflight.md` | Confirm plan, web access, GitHub, Google | 10 min |
-| 2 | The repo | `phases/02-repo.md` | Create their team repo from the template and push it, then install and prove the starter stack | 25 min |
+| 2 | The repo | `phases/02-repo.md` | Create their team repo from the template and push it, install and prove the starter stack, then run `/ledger` to measure the week before anything is tailored | 50 min |
 | 3 | About me | `phases/03-about-me.md` | Fill `shared/about-me.md` | 15 min |
 | 4 | Business brain | `phases/04-business-brain.md` | Fill `shared/business-brain.md` | 20 min |
 | 5 | Voice | `phases/05-writing-rules.md` | Fill `shared/writing-rules.md`, including real samples | 15 min |
@@ -57,7 +57,7 @@ check makes concrete.
 | 11 | Oversight | `phases/11-oversight.md` | Deploy the dashboard, wire the buttons, phone bookmark | 30 min |
 | 12 | The standard | `phases/12-the-standard.md` | Their `done` block in their own words, one verdict captured, the two weekly jobs on | 25 min |
 
-Just under four hours of work, deliberately split so that nobody has to do it in one
+About four and a half hours of work, deliberately split so that nobody has to do it in one
 sitting.
 
 **Phase 12 is not optional.** Phases 1-11 make the team run; phase 12 is the only part that
