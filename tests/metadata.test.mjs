@@ -121,3 +121,32 @@ test('the README quotes the number of tests the suite actually reports', () => {
       `the README says ${claimed} tests and the suite reports ${reported[1]}`)
   }
 })
+
+/* `/new-workflow` is the command a student is taught to build jobs with, and its template is the
+   only YAML most of them will ever see. It wrote a `trigger:` block with `schedule:` and
+   `fire: true` and **no `armed:` and no `reason:`** — while citing `workflows/README.md` as the
+   contract it matches. That contract says, in as many words, that `npm run check:arming` refuses
+   a file without them. Verified: dropping that exact file into a fresh template clone produces
+   "Monday Brief: is not armed and carries no reason".
+
+   So the first job a student ever builds broke the repo's own check, and if they then scheduled
+   it in a browser — which the Day 2 homework asks for — it became UNAPPROVED: a routine ringing
+   that the file says is off. That is the one state the whole course calls "the one that costs
+   money", manufactured by following the instructions. */
+
+test('the workflow template /new-workflow writes satisfies the contract it cites', async () => {
+  const skill = await read('agent-team-os/skills/new-workflow/SKILL.md')
+  const yaml = /```yaml\n([\s\S]*?)```/.exec(skill)
+  assert.ok(yaml, '/new-workflow no longer shows the file it writes')
+  const trigger = yaml[1].split('trigger:')[1]?.split('\noutput:')[0] ?? ''
+  assert.match(trigger, /armed:/, 'the trigger block it writes has no `armed:` - check:arming refuses the file')
+  assert.match(trigger, /reason:/, 'the trigger block it writes has no `reason:` - check:arming refuses the file')
+  assert.match(trigger, /armed:\s*false/,
+    'a job must not arm itself by existing - `armed: true` is set by /arm, after a routine is confirmed')
+})
+
+test('/new-workflow tells the student not to schedule it by hand', async () => {
+  const skill = await read('agent-team-os/skills/new-workflow/SKILL.md')
+  assert.match(skill, /\/arm/,
+    'nothing here points at /arm, so the student is left to create the routine in a browser - which is exactly how a job becomes UNAPPROVED')
+})

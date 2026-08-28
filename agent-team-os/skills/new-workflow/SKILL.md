@@ -75,6 +75,8 @@ steps: [pull-calendar, scan-inbox, write-brief, review-draft]
 trigger:
   schedule: "weekly mon 06:00"
   fire: true
+  armed: false
+  reason: "<what would have to change for this to be worth a run>"
 output: inbox/{date}/monday-brief.md
 done:
   looks_like: "<their sentence, verbatim>"
@@ -84,6 +86,21 @@ done:
 
 `review-draft` is always the **last** step, and it only appears alongside a `done` block -
 the two ship together or neither does.
+
+**`armed: false` and a `reason:` are not optional, and they are not a formality.** A `schedule:`
+line makes nothing happen - a *routine* is the alarm clock - so a new file always arrives switched
+off. `npm run check:arming` refuses a file without both, and it is right to: a job that armed
+itself by existing would start spending runs the moment it was written.
+
+Write the reason from what they just told you, in their words. "Off until you have a week of runs
+to review" is a reason. "Not needed" is not - six weeks later it is indistinguishable from having
+forgotten.
+
+Then say this out loud, because it is the step people skip: **this job does not run yet.** When
+they want it to, `/arm` asks for their run cap, creates the routine, and confirms it exists before
+writing `armed: true`. Never tell them to create the routine themselves at `claude.ai/code` - a
+routine ringing for a file that says `armed: false` is the **unapproved** state, and it is the one
+that costs money.
 
 Then read it back in one plain sentence, including what happens when it falls short: "Every
 Monday at six, Research pulls your calendar, scans your inbox, and writes a brief into that
