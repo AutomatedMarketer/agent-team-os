@@ -4,7 +4,7 @@
 **Ends with:** the dashboard live at a URL they own, the fire buttons wired, the URL
 bookmarked on their phone, and one job dispatched from that phone and watched to the end.
 
-This is stage 5 of 5. The team already works; this phase makes it visible from a phone at
+This is stage 5 of 6. The team already works; this phase makes it visible from a phone at
 the school gate. More people are lost by not finding their way back in than by anything
 technical — the bookmark at the end is not a nicety, it is the retention step.
 

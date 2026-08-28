@@ -4,7 +4,7 @@
 **Ends with:** at least two workflow files in `workflows/`, each valid, each registered as a
 scheduled routine, and a dashboard board chosen in `tiles.yml`.
 
-This is stage 4 of 5, and it is the one that makes this a team instead of a toolbox. A skill
+This is stage 4 of 6, and it is the one that makes this a team instead of a toolbox. A skill
 does one task. A workflow gets a job done — several skills chained, on a schedule, with the
 result landing somewhere the user will actually find it.
 
@@ -160,6 +160,17 @@ test('the chosen selection parses and validates clean', async () => {
 
 This is the same move `/new-agent` makes when it registers a slug in the test files: the
 tests describe the repo the user actually has.
+
+## Before you chain anything: was the ledger deferred?
+
+Read `.agent-team/onboarding-state.md`. If it carries a `ledger: deferred` line, phase 2 left the
+week unmeasured on purpose - it was being measured somewhere else - and everything you are about
+to chain would be generic.
+
+Ask once: *"Has your week been measured yet? If it has, let us get `ledger.yml` in before we
+build jobs around it."* If it has, run `/ledger`, then `/match`, and remove the deferral line. If
+it genuinely has not, say plainly that these workflows are being built from the shipped set
+rather than from their numbers, and leave the line where it is so the next phase sees it too.
 
 ## Check
 

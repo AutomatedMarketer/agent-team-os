@@ -130,8 +130,8 @@ If they say they are measuring their week in a workshop or with someone else, **
    `ledger: deferred - being measured live, revisit before phase 10`
 3. Carry on to phase 3.
 
-**A deferral is not a skip.** It is written down, it names when it comes back, and phase 10 -
-where jobs get chained and scheduled - checks for it. Anything derived from the week before then
+**A deferral is not a skip.** It is written down and it names when it comes back, and phase 10
+reads that line before it chains anything. Anything derived from the week before then
 is generic by admission rather than by accident.
 
 ## Check

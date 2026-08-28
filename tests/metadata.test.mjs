@@ -191,3 +191,35 @@ test('the phase 2 CHECK block admits a deferred ledger too, not just the prose a
       'the Check block still passes only on a clean ledger, so a deferring student cannot advance')
   }
 })
+
+/* Phase 2 told the student "phase 10 checks for it" about a deferred ledger. Phase 10 did not.
+   A deferral that nothing downstream reads is a skip with better paperwork — and the promise of a
+   safety net is worse than no net, because it stops anyone looking for one. */
+
+test('the phase that promises to pick up a deferred ledger actually reads it', async () => {
+  const two = await read('agent-team-os/skills/onboard/phases/02-repo.md')
+  const claim = /phase (\d+)\s*\n?\s*reads that line|phase (\d+)[^.]*checks for it/.exec(two)
+  if (!claim) return
+  const number = claim[1] ?? claim[2]
+  const target = await read(`agent-team-os/skills/onboard/phases/${String(number).padStart(2, '0')}-workflows.md`)
+    .catch(() => null)
+  assert.ok(target, `phase 2 names phase ${number}, which could not be read`)
+  // Not just the word "deferred" - the phase has to name the file the line lives in and the
+  // literal line it is looking for, or it is not reading anything.
+  assert.match(target, /onboarding-state\.md/,
+    `phase ${number} never opens the state file, so it cannot be reading the deferral`)
+  assert.match(target, /ledger: deferred/,
+    `phase ${number} never looks for the \`ledger: deferred\` line phase 2 says it reads`)
+})
+
+test('every phase file agrees with the skill on how many stages there are', async () => {
+  const skill = await read('agent-team-os/skills/onboard/SKILL.md')
+  const stageCount = [...skill.matchAll(/^\| (\d+) · ([A-Za-z]+) \|/gm)].length
+  for (const file of phaseFiles) {
+    const body = await read(`agent-team-os/skills/onboard/phases/${file}`)
+    for (const found of body.matchAll(/stage \d+ of (\d+)/gi)) {
+      assert.equal(Number(found[1]), stageCount,
+        `${file} says "${found[0]}" and the skill defines ${stageCount} stages`)
+    }
+  }
+})
