@@ -3,12 +3,12 @@
   "owner": {
     "name": "Nuno Tavares"
   },
-  "description": "Build and run your own AI agent team. /onboard scaffolds a marketing team in twelve resumable phases across six stages, ending with workflows on schedules and a dashboard on your phone; /onboard-ceo scaffolds a CEO team that produces a Monday Brief. Plus /new-agent, /new-workflow, /add-pack and /audit. Level 2 of The Claude Code Workshop.",
+  "description": "Build and run your own AI agent team, derived from your own week rather than shipped fixed. /ledger interviews you about where your time actually goes; /match turns those numbers into a proposed team and an honest gaps list; /onboard scaffolds the repo in twelve resumable phases across six stages; /routines and /arm make sure every job either rings or says in writing why it is off. Plus /new-agent, /new-workflow, /add-pack, /audit and /onboard-ceo. Level 2 of The Claude Code Workshop.",
   "plugins": [
     {
       "name": "agent-team-os",
       "source": "./agent-team-os",
-      "description": "Hire workers, not tools. /onboard builds your marketing team repo end to end in twelve resumable phases across six stages, from a blank GitHub account to a dashboard on your phone. /onboard-ceo builds a CEO team in six, ending with a Monday Brief written by a scheduled run. /new-agent adds a specialist. /new-workflow turns a conversation into a named, scheduled job. /add-pack installs a ready-made one. /audit tells you what is working, what is stale, and what was never set up."
+      "description": "Hire workers, not tools. /ledger measures your week in your own words. /match derives the team those numbers justify and lists what nothing here does. /onboard builds the repo end to end, from a blank GitHub account to a dashboard on your phone. /routines snapshots what is really scheduled on your account and /arm settles every job into armed or off-with-a-reason, so nothing is left pretending to run. /new-agent adds a specialist, /new-workflow turns a conversation into a named scheduled job, /add-pack installs a ready-made one, /audit says what is working, what is stale and what was never set up, and /onboard-ceo builds a CEO team ending in a Monday Brief."
     }
   ]
 }

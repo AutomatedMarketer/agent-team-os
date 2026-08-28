@@ -264,3 +264,29 @@ test('/new-workflow does not tell them to do the thing it just forbade', async (
   assert.ok(!/Routines\s*(?:→|->)\s*New/.test(register),
     'the same file forbids hand-made routines and then walks them through making one')
 })
+
+/* The storefront named six of the ten commands that ship. The four it left out - /ledger,
+   /match, /arm and /routines - are the four the whole 2026-08-27 pivot rests on: measure the
+   week, derive the team from it, then make every job either ring or say in writing why it is
+   off. A stranger reading the marketplace entry saw a plugin that scaffolds a team, with no
+   sign that it measures anything first. Found by cloning the repo as a stranger, 2026-08-28. */
+
+const commands = (await readdir(new URL('agent-team-os/skills/', root), { withFileTypes: true }))
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+
+test('the storefront names every command that ships, not just the memorable ones', () => {
+  assert.ok(commands.length > 0, 'no skills found to check the storefront against')
+  const missing = commands.filter((slug) => !marketplace.includes('/' + slug))
+  assert.deepEqual(missing, [],
+    'marketplace.json ships these commands without naming them: ' + missing.map((s) => '/' + s).join(', '))
+})
+
+test('the storefront does not advertise a command that does not exist', () => {
+  const shipped = new Set(commands)
+  // Only slash-commands, so ordinary paths and URLs in the copy are left alone.
+  const advertised = [...marketplace.matchAll(/(?:^|[\s(])\/([a-z][a-z0-9-]*)/g)].map((match) => match[1])
+  const phantom = [...new Set(advertised)].filter((name) => !shipped.has(name))
+  assert.deepEqual(phantom, [],
+    'marketplace.json advertises commands that do not ship: ' + phantom.map((s) => '/' + s).join(', '))
+})
