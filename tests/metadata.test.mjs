@@ -223,3 +223,44 @@ test('every phase file agrees with the skill on how many stages there are', asyn
     }
   }
 })
+
+/* `/arm` says "Never arm anything not in `proposals.yml`". A proposal's `item` is an agent, a
+   skill OR a workflow - and the shipped example has only `skill:triage-inbox` and `agent:content`,
+   not one workflow between them. `/arm` creates one routine per WORKFLOW, using the workflow's
+   own schedule. So on the taught path the student types `/arm` on Thursday night and it has
+   nothing it is allowed to arm: their proposals name skills, and the two workflows they built
+   that afternoon were not in a file written the previous morning.
+
+   The bridge is real - proposals name work, `/new-workflow` turns work into a job, you arm the
+   job - and it was written down nowhere. */
+
+test('/arm explains how an approved skill or agent becomes an armable workflow', async () => {
+  const arm = await read('agent-team-os/skills/arm/SKILL.md')
+  // The RULE itself, not the file - the first version of this test matched `skill:` anywhere
+  // in the document and stayed green when the rule went back to naming only workflows.
+  const bullets = arm.split('- **Never arm anything')
+  assert.ok(bullets.length > 1, 'the "never arm anything not approved" rule is gone entirely')
+  const rule = bullets[1].split('- **Never arm in a batch')[0]
+  assert.match(rule, /`skill:<slug>`/,
+    'the rule never says an approved SKILL can make a workflow armable - and most proposals name skills')
+  assert.match(rule, /`agent:<slug>`/,
+    'the rule never says an approved AGENT can make a workflow armable')
+  assert.match(rule, /steps:/,
+    'nothing connects an approved skill to the `steps:` of the workflow that would carry it')
+  assert.match(rule, /new-workflow/,
+    'the rule never names the command that turns approved work into an armable job')
+})
+
+/* `new-workflow/SKILL.md` says, at one point: "Never tell them to create the routine themselves
+   at `claude.ai/code`." Thirty-six lines later it says: "The routine - `claude.ai/code` ->
+   Routines -> New". Students run this command twice in one session. */
+
+test('/new-workflow does not tell them to do the thing it just forbade', async () => {
+  const skill = await read('agent-team-os/skills/new-workflow/SKILL.md')
+  const forbids = /Never tell them to create the routine themselves/.test(skill)
+  if (!forbids) return
+  const register = skill.split('## Register it')[1]
+  if (!register) return
+  assert.ok(!/Routines\s*(?:→|->)\s*New/.test(register),
+    'the same file forbids hand-made routines and then walks them through making one')
+})

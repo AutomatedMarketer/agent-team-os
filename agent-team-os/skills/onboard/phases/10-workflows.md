@@ -61,6 +61,8 @@ steps: [pull-calendar, scan-inbox, write-brief]
 trigger:
   schedule: "weekly mon 06:00"
   fire: true
+  armed: false
+  reason: "<what would have to change for this to be worth a run>"
 output: inbox/{date}/monday-brief.md
 ```
 

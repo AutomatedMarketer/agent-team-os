@@ -124,7 +124,17 @@ change for it to be worth a run.
 
 ## What this skill must never do
 
-- **Never arm anything not in `proposals.yml`.** If it was not approved, it does not run.
+- **Never arm anything their ledger did not ask for.** Concretely, a workflow is armable when
+  `proposals.yml` names it as `workflow:<slug>`, **or** when its `steps:` are skills approved
+  there as `skill:<slug>`, **or** when its `owner:` is an agent approved there as `agent:<slug>`.
+  Anything else was not approved, and it does not run.
+
+  This matters because most proposals name a **skill** or an **agent**, not a workflow — a
+  proposal is a decision about *work*, and a workflow is how that work gets a clock. `/new-workflow`
+  is the step in between. A student who approved `skill:triage-inbox` on Monday and chained it
+  into `inbox-triage` on Wednesday has approved that job; say so out loud when you arm it, naming
+  the proposal line it traces back to. If a workflow traces back to nothing in `proposals.yml`,
+  do not arm it — ask them to run `/match` again now that the job exists.
 - **Never arm in a batch.** One at a time, each confirmed.
 - **Never claim a routine exists without a `list` that shows it.**
 - **Never delete a routine.** The API has no delete — only `claude.ai/code/routines` can. Say that

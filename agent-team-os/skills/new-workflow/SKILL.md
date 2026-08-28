@@ -132,35 +132,33 @@ node --test
 Both clean. If the validator reports a problem, fix the file — not the validator — and run
 it again.
 
-## Register it
+## Switch it on — later, and not from here
 
-1. **The routine** — if it has a `schedule`: `claude.ai/code` → Routines → New, pointed at
-   their repo, schedule matching the file, model from the owner's row in
-   `shared/standards/model-card.md`. The prompt:
+The file exists. Nothing rings yet, and that is correct: it shipped `armed: false` with a reason,
+because a job that armed itself by existing would start spending the moment it was written.
 
-   > "Run the <name> workflow: read `workflows/<slug>.yml`, run each step in order as the
-   > owner agent, write the result to the output path, follow the run-log skill and commit
-   > both files."
+**Do not create a routine for it.** Not here, not at `claude.ai/code`, not "just to test it". A
+routine ringing for a file that says `armed: false` is the **unapproved** state — spend nobody
+agreed to — and `npm run check:arming` exits non-zero on it.
 
-   One routine runs the whole chain — that is one run against the daily cap, not one per
-   step.
+When they want it to run, `/arm`:
 
-2. **The button** — if it has `fire: true` and their dashboard is deployed: the workflow
-   appears on the board on the next visit, but the button dispatches nothing until its
-   trigger URL is registered. Walk them through it: open the routine, copy its trigger
-   URL, add `"<slug>": "<that URL>"` to `FIRE_TRIGGERS` in the Vercel project's
-   environment variables, redeploy. The URL goes into the Vercel form only — not into the
-   repo, not into this chat. If one gets pasted here anyway, tell them to regenerate it on
-   the routine and do not repeat it back.
+1. Asks for their run cap first. It is a blocker, not a formality
+2. Creates **one** routine, named after the workflow, on the workflow's own schedule, with the
+   model from the owner's row in `shared/standards/model-card.md`
+3. Calls back to confirm the routine actually exists — a create that returned without an error
+   is not a routine that exists
+4. Only then writes `armed: true` into the file, so the file and the alarm clock agree
 
-3. **Prove it** — press **Run now** on the routine (or tap the new button), and confirm a
-   commit lands with the output file at the workflow's `output` path.
+One routine runs the whole chain: one run against the daily cap, not one per step.
 
-```bash
-git add workflows/<slug>.yml
-git commit -m "feat: <slug> workflow"
-git push
-```
+**The button** — if it has `fire: true` and their dashboard is deployed: the workflow appears on
+the board on the next visit, but the button dispatches nothing until its trigger URL is
+registered. That happens after `/arm` has made the routine: open the routine, copy its trigger
+URL, add `"<slug>": "<that URL>"` to `FIRE_TRIGGERS` in the Vercel project's environment
+variables, redeploy. The URL goes into the Vercel form only — not into the repo, not into this
+chat. If one gets pasted here anyway, tell them to regenerate it on the routine and do not repeat
+it back.
 
 ## Report back
 
