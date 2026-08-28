@@ -11,9 +11,9 @@ it, and when it should happen. It does not make anything happen.
 A **routine** is the alarm clock. It is the thing that actually wakes up at the appointed
 time, starts a cloud session, and sets an agent to work.
 
-The two are easy to confuse, and confusing them is expensive: a repo can describe ten jobs
-while only one alarm clock exists, and every dashboard reading those files will report ten
-jobs running. This command shows the alarm clocks, and only the alarm clocks.
+The two are easy to confuse, and confusing them is expensive: this repo describes nine jobs
+while one alarm clock exists, and every dashboard reading those files reported nine jobs
+running. This command shows the alarm clocks, and only the alarm clocks.
 
 It changes nothing about your routines: it cannot arm, pause, reschedule or delete one. The only
 thing it writes is a snapshot of what it found, into your own repo, so that things which cannot
@@ -86,8 +86,9 @@ file as current, and says out loud when the snapshot is more than a day old - be
 presented as live is the same class of lie as a workflow file claiming a schedule nothing fires.
 If you cannot stamp it, do not write it.
 
-`/arm` compares against this file. **The dashboard does not read it yet** - that is the next piece
-of work, not something already true. Say so if anybody asks.
+Both `npm run check:arming` and the dashboard read this file. The board shows every job as armed,
+declared, unapproved or off, and prints the moment this snapshot was taken beside them - so if you
+do not commit it, the board says it cannot tell which jobs are real, rather than guessing.
 
 ### 5. Read the result back
 

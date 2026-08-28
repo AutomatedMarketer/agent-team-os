@@ -99,6 +99,9 @@ trigger:
 
 The file stays. Nothing is deleted. One line changes later when they want it on.
 
+**And when you DO arm one, delete its `reason:`.** The reason says why it is off; leaving it behind
+prints a job under "Armed" with "Off until you know your run cap" underneath it.
+
 A reason is required and it is checked. "Not needed" is not a reason — say what would have to
 change for it to be worth a run.
 
@@ -115,7 +118,8 @@ change for it to be worth a run.
 - [ ] Every job left off has `armed: false` **and a written reason**, committed
 - [ ] `declared` is empty — nothing claims a schedule that no routine backs
 - [ ] `unapproved` is empty — nothing is firing that the file never approved
-- [ ] `npm run check:arming` exits clean
+- [ ] `npm run check:arming` exits clean — a declared job is a problem, so this cannot pass while
+      any job claims a schedule nothing backs
 - [ ] Orphan routines were reported, not silently adopted
 
 ## What this skill must never do
