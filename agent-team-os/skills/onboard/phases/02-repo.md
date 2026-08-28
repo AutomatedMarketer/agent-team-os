@@ -113,7 +113,26 @@ Say why the order is this way, once, in these words:
 > because a wrong number here is obvious to you, and a wrong list of agents is not."
 
 Do not continue to phase 3 until `npm run check:ledger` exits clean and the owner has said the
-week reads right. That agreement is the gate, not the file existing.
+week reads right, **or** the ledger has been deliberately deferred (below). That agreement is the
+gate, not the file existing.
+
+### If they are measuring the week somewhere else
+
+Some people arrive here having been told to do this part in a room, with somebody asking the
+second question. That is a better ledger than one written alone at eleven at night, so do not
+argue them out of it and do not quietly skip it either.
+
+If they say they are measuring their week in a workshop or with someone else, **defer it**:
+
+1. Say it back once - *"Then we leave the ledger empty for now. Nothing after this can be
+   tailored to your week until it exists, so the next few phases stay generic on purpose."*
+2. Write the deferral into `.agent-team/onboarding-state.md`, on its own line:
+   `ledger: deferred - being measured live, revisit before phase 10`
+3. Carry on to phase 3.
+
+**A deferral is not a skip.** It is written down, it names when it comes back, and phase 10 -
+where jobs get chained and scheduled - checks for it. Anything derived from the week before then
+is generic by admission rather than by accident.
 
 ## Check
 

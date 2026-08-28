@@ -150,3 +150,28 @@ test('/new-workflow tells the student not to schedule it by hand', async () => {
   assert.match(skill, /\/arm/,
     'nothing here points at /arm, so the student is left to create the routine in a browser - which is exactly how a job becomes UNAPPROVED')
 })
+
+/* The pre-work tells a student to decline `/ledger` because the ledger is measured live in the
+   room, with somebody asking the second question - the course's stated single most important
+   safeguard. Phase 2 then says "Do not continue to phase 3 until `npm run check:ledger` exits
+   clean". Those cannot both be followed. A student doing the pre-work as instructed stalls at
+   phase 2 with no way forward and no explanation.
+
+   Phase 2 needs a path for "I am measuring this in a workshop on Wednesday" that is not a
+   deadlock and is not a silent skip. */
+
+test('phase 2 has a deferral path for a ledger that is being measured elsewhere', async () => {
+  const phase = await read('agent-team-os/skills/onboard/phases/02-repo.md')
+  assert.match(phase, /defer/i,
+    'phase 2 offers no way to say "I am measuring my week in the workshop", so the pre-work deadlocks here')
+  assert.match(phase, /\.agent-team\/onboarding-state\.md|onboarding-state/,
+    'a deferral that is not written down is a skip - phase 3 would never know it happened')
+})
+
+test('the phase 2 gate admits a deferred ledger, rather than only a clean one', async () => {
+  const phase = await read('agent-team-os/skills/onboard/phases/02-repo.md')
+  const gate = /Do not continue to phase 3[^.]*\./.exec(phase)
+  assert.ok(gate, 'the phase 3 gate sentence is gone entirely - it should still be a gate')
+  assert.match(gate[0], /defer/i,
+    `the gate still admits only a clean ledger: "${gate[0]}"`)
+})
