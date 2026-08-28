@@ -1,16 +1,68 @@
 # agent-team-os
 
-Build and run your own AI agent team. Level 2 of The Claude Code Workshop.
+**The plugin that builds and runs an AI agent team.**
 
-Level 1 taught you to build apps. This one hires workers.
+Ten commands for Claude Code. They set up a team repo, measure where your week actually goes,
+propose a team from those numbers, and switch on only the jobs you approved.
 
-## What you end up with
+This repo is **the tooling**. Your team lives in a separate repo of your own — see
+[agent-team-template](https://github.com/AutomatedMarketer/agent-team-template).
 
-- A GitHub repo that **is** your team: an orchestrator, five agents, your business context
-- Agents that run on a schedule in the cloud, while your laptop is shut
-- Every run committed back to your own repo, forever, in git
-- A dashboard at a URL you control
-- **No API key, no server, no monthly add-on.** It runs on the Claude plan you already have.
+---
+
+## Who this is for
+
+Someone running a business, or working in one, who wants repeating work to happen without being
+asked — and wants to be able to check every claim the system makes about what it did.
+
+---
+
+## The ten commands
+
+**Setting up**
+
+| Command | What it does |
+|---|---|
+| `/onboard` | Builds your team repo across twelve resumable phases. Stop and come back; it remembers |
+| `/onboard-ceo` | A six-phase variant ending with a Monday Brief. Separate flow, untouched by the rest |
+| `/add-pack` | Installs a ready-made agent pack into an existing team repo |
+
+**Deciding what to build**
+
+| Command | What it does |
+|---|---|
+| `/ledger` | Interviews you about where your week actually goes and writes `ledger.yml`. Builds nothing |
+| `/match` | Reads that ledger and proposes a team. Every proposal cites your words, your number, and something that already exists — or it is refused |
+
+**Making it run**
+
+| Command | What it does |
+|---|---|
+| `/routines` | Shows every scheduled routine on your account: when it fires, when it last ran. Read-only |
+| `/arm` | Turns approved jobs into real routines, one at a time, each confirmed afterwards |
+
+**Keeping it honest**
+
+| Command | What it does |
+|---|---|
+| `/audit` | Checks your team repo and reports what works, what is stale, and what was never finished |
+| `/new-agent` | Adds a specialist, written to the same standard as the ones that shipped |
+| `/new-workflow` | Turns a conversation into one validated job file. You never write YAML |
+
+---
+
+## Before you start
+
+| You need | Why |
+|---|---|
+| **Claude Pro or Max** | Free cannot run scheduled work |
+| **Claude Code**, installed and signed in | This is a Claude Code plugin |
+| **A GitHub account** connected to claude.ai | Your team runs in the cloud from a GitHub repo |
+| **Node.js 20 or newer** | For the checks your team repo runs. `node --version` |
+
+Works on Mac and Windows.
+
+---
 
 ## Install
 
@@ -19,80 +71,85 @@ Level 1 taught you to build apps. This one hires workers.
 /plugin install agent-team-os
 ```
 
-Then:
+Then, in a new session:
 
 ```
 /onboard
 ```
 
-Eleven phases across five stages, about three and a half hours of work, resumable at every
-boundary. Stop after any phase, close your laptop, come back next week and type
-`continue onboarding`.
-
-## The five stages
-
-| Stage | You answer | You end up with |
-|---|---|---|
-| 1 · Brief | Twenty minutes of talking about the business | A repo that knows your business cold |
-| 2 · Access | Which tools do you live in? | Live calendar and inbox data |
-| 3 · Training | What do you actually do all week? | Agents producing real artifacts on a schedule |
-| 4 · Workflows | Which of those run together, and when? | Named jobs that run with your laptop closed |
-| 5 · Oversight | — | The dashboard on your phone, dispatch from anywhere |
-
-Stage 4 is the product. A skill is a verb; a workflow is a job. Everyone else stops at a
-pile of skills — this chains them into named jobs with a schedule, a button, and a visible
-status.
-
-If you finished the original nine-phase install, run `/onboard` again — it recognises the
-older state file and resumes straight into stage 4. Nothing gets replaced.
-
-## What it gives you
-
-| Command | Does |
-|---|---|
-| `/onboard` | Builds the whole team, from an empty GitHub account to a dashboard on your phone |
-| `/audit` | Tells you what is working, what is stale, and what was never set up |
-| `/new-agent` | Adds a specialist, written to the same standard as the five that ship |
-| `/new-workflow` | Turns a conversation into a named job — chained skills, a schedule, a button |
-| `/add-pack` | Installs a ready-made pack and checks it broke nothing |
-
-## The five agents
-
-| Agent | Model | Runs |
-|---|---|---|
-| Research | `sonnet` | Daily, or when you ask |
-| Content | `opus` | Daily |
-| Email | `sonnet` | A few times a day |
-| Customer service | `sonnet` | When a customer asks — fired by a webhook, not a schedule |
-| Sales | `opus` | Daily, or when you ask |
-
-Plus the orchestrator, which is the repo itself. You talk to it; it delegates.
-
-**Why two models.** Every scheduled run draws from your Claude plan the same way a chat
-does. High-frequency agents run on Sonnet so you stay inside your daily allowance.
-Judgment and voice run on Opus. Getting this wrong is the fastest way to conclude the whole
-thing does not work.
-
-## What it will not do
-
-No agent sends an email, publishes a post, deletes a record, or spends money. They draft,
-they log, they stop. The cost of a bad draft is ten seconds of reading. The cost of a bad
-send is a relationship.
-
-## Requirements
-
-- Claude Pro or Max — scheduled runs are not available on Free
-- Claude Code on the web, with GitHub connected
-- A Google account, if you want the email agent to have an inbox
-
-## The repos
-
-| Repo | What |
-|---|---|
-| `agent-team-os` | This plugin |
-| `agent-team-template` | The team repo `/onboard` creates from |
-| `agent-cockpit` | The dashboard, forked and deployed to your own hosting |
+That is the whole install. There is nothing to clone and nothing to configure.
 
 ---
 
-Built by [Nuno Tavares](https://automatedmarketer.net) · V-C Ink
+## Did it work?
+
+Type `/` and look for the commands above. If `/onboard` and `/ledger` appear, the plugin is
+installed.
+
+If you are working on this repo rather than using it:
+
+```bash
+npm test
+```
+
+28 tests, no dependencies to install. They cover the deterministic helpers the skills shell out to
+— the routine formatter's cron parsing and timezone arithmetic, mostly, because doing that by hand
+is how a monthly job gets reported as daily.
+
+---
+
+## The order these are meant to be used in
+
+The sequence is the point, and it is deliberate.
+
+1. **`/onboard`** — the repo exists, and knows the business
+2. **`/ledger`** — your week is measured, in your own words, and **you** correct the numbers
+3. **`/match`** — the numbers propose a team, and honestly name what nothing here can do
+4. **`/routines`** — you see what is actually scheduled on your account
+5. **`/arm`** — only what you approved gets switched on
+
+**A wrong ledger is obvious to the person who lived that week. A wrong list of agents is not.**
+That is why the measuring comes first, and why `/match` refuses to propose anything while the
+ledger still has problems in it.
+
+---
+
+## What these commands will never do
+
+- **Arm anything you did not approve.** `/arm` reads `proposals.yml` and nothing else
+- **Arm without telling you the cost.** It stops and asks for your run cap first, every time
+- **Claim a routine exists without checking.** A create that returned without an error is not a
+  routine that exists — it confirms with a second call before writing anything down
+- **Delete a routine.** The API has no delete. Only `claude.ai/code/routines` can, in a browser.
+  Said plainly rather than worked around
+- **Invent a capability.** `/match` may only propose things that already exist in your repo
+
+---
+
+## When it breaks
+
+| What you saw | What to do |
+|---|---|
+| `/onboard` is not a command | The plugin is not installed, or the session started before you installed it. Restart Claude Code |
+| `/ledger` says there is no repo | Run `/onboard` first — `ledger.yml` is committed into the team repo |
+| `/match` says the ledger has problems | It refuses to derive anything from numbers that are not sound. Fix what it names |
+| `/arm` will not proceed | It wants your run cap said out loud, and `proposals.yml` passing its check. Both are deliberate |
+| `/routines` shows nothing | Either nothing is scheduled, or the account has no routines yet. It will not guess which |
+| A job fires twice a day | Two routines for one job. Remove one at `claude.ai/code/routines` — the API cannot |
+
+---
+
+## What is in this repo
+
+```
+agent-team-os/skills/     the ten commands
+tests/                    28 tests, no dependencies
+```
+
+Each command is a `SKILL.md` — plain instructions Claude follows, which you can read and change.
+Two of them shell out to a script for arithmetic that deserves tests: `format-routines.mjs` does
+the cron and timezone work behind `/routines`.
+
+---
+
+Built by [Nuno Tavares](https://github.com/AutomatedMarketer) for the V-C Ink Level 2 bootcamp.
