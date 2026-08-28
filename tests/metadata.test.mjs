@@ -290,3 +290,32 @@ test('the storefront does not advertise a command that does not exist', () => {
   assert.deepEqual(phantom, [],
     'marketplace.json advertises commands that do not ship: ' + phantom.map((s) => '/' + s).join(', '))
 })
+
+/* `/audit` told students to count unfilled brain fields with `grep -c "fill:"`. That counts
+   LINES CONTAINING a match, not matches — and business-brain.md puts two markers on one row in
+   the verified-claims table. So a student's audit reported 23 unfilled fields where the cockpit's
+   ladder, which counts occurrences, saw 26. Two numbers for one fact about one repo, in the same
+   course, on the morning the course tells them a nearly-empty report is a pass.
+   Found 2026-08-28 by walking the course as a student — after making the identical mistake in the
+   walkthrough log first. */
+
+test('no skill counts fill-markers with grep -c, which undercounts rows carrying two', async () => {
+  const skills = (await readdir(new URL('agent-team-os/skills/', root), { withFileTypes: true }))
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+
+  const offenders = []
+  for (const slug of skills) {
+    const body = await read(`agent-team-os/skills/${slug}/SKILL.md`)
+    // grep -c anywhere on a line that also mentions the fill marker
+    for (const line of body.split(/\r?\n/)) {
+      if (/grep\s+(-\w*\s+)*-\w*c/.test(line) && /fill:/.test(line)) {
+        offenders.push(`${slug}: ${line.trim()}`)
+      }
+    }
+  }
+
+  assert.deepEqual(offenders, [],
+    'these count fill-markers by line, so they undercount and disagree with the dashboard:\n  ' +
+    offenders.join('\n  '))
+})

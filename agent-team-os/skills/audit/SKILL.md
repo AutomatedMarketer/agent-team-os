@@ -68,8 +68,16 @@ nothing, put it at the top of the report instead of here.>
 ## How to count empty fields
 
 ```bash
-grep -c "fill:" shared/about-me.md shared/business-brain.md shared/writing-rules.md
+grep -o '<!-- fill: [a-z0-9-]* -->' shared/about-me.md shared/business-brain.md shared/writing-rules.md
 ```
+
+That prints one line per unfilled field, `file:marker`, so the count is `| wc -l` and the names
+are already in front of you.
+
+**Do not use `grep -c` for this.** It counts *lines that contain* a match, not matches, and
+`business-brain.md` puts two markers on one row in the verified-claims table — so `grep -c`
+reports 11 where the truth is 14. The dashboard counts occurrences, so a `-c` count makes your
+report and their board disagree about the same repo, which is the one thing an audit must never do.
 
 Anything above zero is an unfilled field. Name the specific markers, not just the count —
 "you are missing your voice samples" is actionable, "3 fields missing" is not.
