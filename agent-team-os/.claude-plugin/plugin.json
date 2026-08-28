@@ -1,7 +1,7 @@
 {
   "name": "agent-team-os",
   "version": "0.1.0",
-  "description": "Build and run an AI agent team on Claude Code Routines. Twelve-phase resumable onboarding across five stages — Brief, Access, Training, Workflows, Oversight — eight agents, workflows on schedules and buttons, a phone dashboard, run logs committed back to your own GitHub repo. Mac and Windows.",
+  "description": "Build and run an AI agent team on Claude Code Routines. Twelve-phase resumable onboarding across six stages — Brief, Access, Training, Workflows, Oversight, Improvement — eight agents, workflows on schedules and buttons, a phone dashboard, run logs committed back to your own GitHub repo. Mac and Windows.",
   "author": {
     "name": "Nuno Tavares"
   }
