@@ -15,7 +15,9 @@ The two are easy to confuse, and confusing them is expensive: a repo can describ
 while only one alarm clock exists, and every dashboard reading those files will report ten
 jobs running. This command shows the alarm clocks, and only the alarm clocks.
 
-It is read-only. It cannot arm, pause, change, or delete anything.
+It changes nothing about your routines: it cannot arm, pause, reschedule or delete one. The only
+thing it writes is a snapshot of what it found, into your own repo, so that things which cannot
+call this API - the dashboard, `/arm` - can still see the truth.
 
 ## What to do
 
@@ -65,7 +67,27 @@ The payload shape:
 The formatter reads the machine's own timezone. Override it with `ROUTINES_TZ` if the owner
 wants another one — `ROUTINES_TZ=America/New_York`.
 
-### 4. Read the result back
+### 4. Commit the snapshot
+
+The dashboard is a web app reading the team repo on GitHub. It cannot call this API - no browser
+can. So the only way what you just fetched reaches the board is if you write it down.
+
+Write `.agent-team/routines.json` in the team repo and commit it:
+
+```json
+{
+  "takenAt": "2026-08-27T18:40:00Z",
+  "routines": [ ...the data array from list... ]
+}
+```
+
+**`takenAt` is not optional.** Everything downstream reports this as a snapshot and says when it
+was taken, because a snapshot presented as live is the same class of lie as a workflow file
+claiming a schedule nothing fires. If you cannot stamp it, do not write it.
+
+This is also what `/arm` compares against, and what tells the board which jobs are real.
+
+### 5. Read the result back
 
 Print the table. Then say, in plain words, only what is actually worth saying:
 
