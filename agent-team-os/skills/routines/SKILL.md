@@ -81,11 +81,13 @@ Write `.agent-team/routines.json` in the team repo and commit it:
 }
 ```
 
-**`takenAt` is not optional.** Everything downstream reports this as a snapshot and says when it
-was taken, because a snapshot presented as live is the same class of lie as a workflow file
-claiming a schedule nothing fires. If you cannot stamp it, do not write it.
+**`takenAt` is not optional.** `npm run check:arming` reads it, refuses to treat an unstamped
+file as current, and says out loud when the snapshot is more than a day old - because a snapshot
+presented as live is the same class of lie as a workflow file claiming a schedule nothing fires.
+If you cannot stamp it, do not write it.
 
-This is also what `/arm` compares against, and what tells the board which jobs are real.
+`/arm` compares against this file. **The dashboard does not read it yet** - that is the next piece
+of work, not something already true. Say so if anybody asks.
 
 ### 5. Read the result back
 

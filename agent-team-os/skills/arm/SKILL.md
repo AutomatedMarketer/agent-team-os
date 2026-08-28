@@ -32,29 +32,32 @@ Three things, and the first one is a blocker.
 From the team repo:
 
 ```bash
-node --input-type=module -e "
-import { loadWorkflows } from './scripts/lib/workflows.mjs'
-import { reconcile } from './scripts/lib/arm.mjs'
-import { readFileSync } from 'node:fs'
-const routines = JSON.parse(readFileSync('.agent-team/routines.json', 'utf8'))
-console.log(JSON.stringify(reconcile(await loadWorkflows(), routines.routines ?? []), null, 2))
-"
+npm run check:arming
 ```
 
-You get three lists, and the middle one is the whole reason this command exists:
+That reads the snapshot safely - on a fresh clone, where `.agent-team/routines.json` does not
+exist yet, it says so instead of crashing - and prints four lists. Two of them cost something:
 
 | | What it means | What it costs |
 |---|---|---|
 | **armed** | The file says run it, and a routine exists | Runs, on schedule |
 | **declared** | The file says run it, and **nothing rings** | Nothing. It is a wish. |
+| **unapproved** | A routine **rings**, and the file says it is off | Runs nobody approved |
 | **off** | Deliberately not armed, with a written reason | Nothing, honestly |
+
+**If it says there is no usable snapshot, run `/routines` first.** Without one this can only report
+what the files claim, and a file claiming a schedule is the exact thing you came here to check.
 
 Plus **orphans**: routines pointing at this repo with no workflow file behind them. Report those;
 do not act on them.
 
-**`declared` is the bug this whole build exists to kill.** A repo can describe ten jobs while one
-alarm clock exists, and every board reading those files will cheerfully report ten jobs running.
+**`declared` is the bug this whole build exists to kill.** This repo describes nine jobs against
+one real alarm clock, and every board reading those files cheerfully reported nine jobs running.
 If anything is in `declared`, say the number out loud before you do anything else.
+
+**`unapproved` is the same bug pointing the other way, and it is the expensive one.** Something is
+firing that the file never approved - real runs, spent every day, on a job nobody said yes to.
+Say that number out loud too, and say what it is costing.
 
 ## 2. Arm one, and only what they approved
 
@@ -111,6 +114,8 @@ change for it to be worth a run.
 - [ ] Every armed job has `armed: true` in its file, committed
 - [ ] Every job left off has `armed: false` **and a written reason**, committed
 - [ ] `declared` is empty — nothing claims a schedule that no routine backs
+- [ ] `unapproved` is empty — nothing is firing that the file never approved
+- [ ] `npm run check:arming` exits clean
 - [ ] Orphan routines were reported, not silently adopted
 
 ## What this skill must never do
