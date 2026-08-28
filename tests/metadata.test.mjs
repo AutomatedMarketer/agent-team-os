@@ -175,3 +175,19 @@ test('the phase 2 gate admits a deferred ledger, rather than only a clean one', 
   assert.match(gate[0], /defer/i,
     `the gate still admits only a clean ledger: "${gate[0]}"`)
 })
+
+/* There are TWO gates in that file, and the first version of this test only read one of them.
+   The prose said "or the ledger has been deliberately deferred"; the `## Check` block below it
+   still demanded a clean `check:ledger`, and `onboard/SKILL.md` says a phase that did not pass
+   its check does not advance. So the deferral was written, tested, green, and still blocked -
+   by the half of the file nobody looked at. Reading one of two gates is how a half-fix passes. */
+
+test('the phase 2 CHECK block admits a deferred ledger too, not just the prose above it', async () => {
+  const phase = await read('agent-team-os/skills/onboard/phases/02-repo.md')
+  const check = phase.split('## Check')[1]
+  assert.ok(check, 'phase 2 has no Check block at all')
+  if (/check:ledger/.test(check)) {
+    assert.match(check, /defer/i,
+      'the Check block still passes only on a clean ledger, so a deferring student cannot advance')
+  }
+})

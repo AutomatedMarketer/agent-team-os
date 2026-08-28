@@ -1,7 +1,7 @@
 # Phase 2 — The repo
 
-**Time:** 20 minutes
-**Ends with:** a repo on their GitHub containing an orchestrator, five agents, and an empty
+**Time:** 25 minutes for the repo and the stack, plus 25 for `/ledger` if it is run here - so 50, or 25 when the ledger is deferred
+**Ends with:** a repo on their GitHub containing eight workers, nine shipped jobs, and an empty
 business brain, pushed and visible in a browser.
 
 ## The idea to land first
@@ -43,7 +43,7 @@ name the five things that matter:
 | What | Where | In one line |
 |---|---|---|
 | The orchestrator | `CLAUDE.md` | The one you talk to |
-| The five agents | `.claude/agents/` | Research, content, email, customer service, sales |
+| The eight workers | `.claude/agents/` | Research, content, email, customer service, sales - plus editor, security and orchestrator, which keep the team honest |
 | Your business | `shared/` | Empty for now. Phases 3 to 5 fill it. |
 | Their work | `agents/<name>/output/` | Where you read what they did |
 | The log | `runs/` | One file per run, forever, in your git history |
@@ -58,7 +58,7 @@ git push
 
 Then: "Open the repo in your browser. Do you see it?"
 
-### 6. The starter stack
+### 5. The starter stack
 
 The repo exists, so its `stack.yml` can be read. Run the `install-stack` skill now, before
 anything else is built.
@@ -143,8 +143,10 @@ is generic by admission rather than by accident.
   a named reason and a fallback
 - `.claude/skills/surplus-burn/config.json` has a real `resetWeekday` and `resetHour` for
   this owner — not `null`, not copied
-- `ledger.yml` exists and is committed, `npm run check:ledger` exits clean, and **the owner has
-  said out loud that the week reads right**
+- **Either** `ledger.yml` exists and is committed, `npm run check:ledger` exits clean, and the
+  owner has said out loud that the week reads right — **or** the ledger is deferred and
+  `.agent-team/onboarding-state.md` carries the `ledger: deferred` line saying so. One or the
+  other. Not neither, and never a silent skip
 
 Write the repo URL into the state file's `repo_url`.
 
