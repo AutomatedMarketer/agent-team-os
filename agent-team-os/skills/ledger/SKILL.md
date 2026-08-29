@@ -140,7 +140,7 @@ Your ledger has 2 things to fix:
 
 Fix anything it names, then read the result back to them out loud:
 
-> "Here is your week. Nine and a half hours, about fourteen hundred a week. Two of those are
+> "Here is your week. Sixteen hours, about two and a half thousand a week. Four of those are
 > ready to hand over, one is parked because nobody acts on it yet, one is a note. Is that
 > right?"
 
