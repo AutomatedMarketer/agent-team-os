@@ -58,7 +58,7 @@ From answer 4, and nothing else:
 | A time or a day | `schedule:` in a spoken form — `daily 06:00`, `weekdays 09:30`, `weekly mon 06:00`, `monthly 1 08:00`, `every 2 hours`. Zero-padded, 24-hour, no cron. |
 | "When I press the button" | `fire: true` and no schedule. |
 | Both — the usual right answer | Both lines. It runs Monday morning whether they are there or not, and they can also fire it from their phone. |
-| More often than hourly | Routines have a 60-minute floor. Add `runner: github-actions` — no floor, no daily cap — and check `/install-github-app` has been run once. Offer this only when hourly is genuinely too slow. |
+| More often than hourly | Routines have a 60-minute floor. Add `runner: github-actions` — a **5-minute** floor instead of sixty, and no daily cap — and check `/install-github-app` has been run once. Offer this only when hourly is genuinely too slow. |
 
 Default `fire: true` on. A button costs nothing, and a workflow without one cannot be
 started from the phone.
@@ -71,7 +71,7 @@ Create `workflows/<slug>.yml` — kebab-case slug, matching the contract in
 ```yaml
 name: Monday Brief
 owner: research
-steps: [pull-calendar, scan-inbox, write-brief, review-draft]
+steps: [scan-market, triage-inbox, write-intel-brief, review-draft]
 trigger:
   schedule: "weekly mon 06:00"
   fire: true
