@@ -31,7 +31,7 @@ you do?" as if texting a friend. That is a sample.
 ## Check
 
 ```bash
-grep -c "fill:" shared/writing-rules.md
+grep -o '<!-- fill: [a-z0-9-]* -->' shared/writing-rules.md | wc -l
 ```
 
 Expect `0`. Also confirm the samples section has real content, not a description of

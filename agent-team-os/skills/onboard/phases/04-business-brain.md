@@ -33,7 +33,7 @@ cites nothing.
 ## Check
 
 ```bash
-grep -c "fill:" shared/business-brain.md
+grep -o '<!-- fill: [a-z0-9-]* -->' shared/business-brain.md | wc -l
 ```
 
 Expect `0`.

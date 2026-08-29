@@ -33,7 +33,7 @@ their phrasing — that is half the point of the file.
 ## Check
 
 ```bash
-grep -c "fill:" shared/about-me.md
+grep -o '<!-- fill: [a-z0-9-]* -->' shared/about-me.md | wc -l
 ```
 
 Expect `0`. If not, name which markers are still there and ask those questions again.

@@ -299,18 +299,37 @@ test('the storefront does not advertise a command that does not exist', () => {
    Found 2026-08-28 by walking the course as a student — after making the identical mistake in the
    walkthrough log first. */
 
-test('no skill counts fill-markers with grep -c, which undercounts rows carrying two', async () => {
-  const skills = (await readdir(new URL('agent-team-os/skills/', root), { withFileTypes: true }))
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
+/* The first version of this test read only `skills/<slug>/SKILL.md`. Onboarding phases live in
+   `skills/onboard/phases/*.md`, which it never opened - so phases 3, 4 and 5 kept telling
+   students `grep -c "fill:"` for another day, and phase 4 under-reported business-brain.md as 11
+   when it holds 14. A guard that checks one file per skill does not guard a skill made of many
+   files. Widened 2026-08-28, walking Lesson 3 as a student. */
+
+async function markdownUnder(dir) {
+  const out = []
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const child = new URL(entry.name + (entry.isDirectory() ? '/' : ''), dir)
+    if (entry.isDirectory()) out.push(...(await markdownUnder(child)))
+    else if (entry.name.endsWith('.md')) out.push(child)
+  }
+  return out
+}
+
+test('no skill file counts fill-markers with grep -c, which undercounts rows carrying two', async () => {
+  const files = await markdownUnder(new URL('agent-team-os/skills/', root))
+  const scanned = files.map((file) => decodeURIComponent(file.pathname).split('/skills/')[1])
+  for (const phase of phaseFiles) {
+    assert.ok(scanned.includes(`onboard/phases/${phase}`),
+      `the scan missed ${phase} - this test exists because it used to miss every phase file`)
+  }
 
   const offenders = []
-  for (const slug of skills) {
-    const body = await read(`agent-team-os/skills/${slug}/SKILL.md`)
+  for (const [index, file] of files.entries()) {
+    const body = await readFile(file, 'utf8')
     // grep -c anywhere on a line that also mentions the fill marker
-    for (const line of body.split(/\r?\n/)) {
+    for (const [lineNumber, line] of body.split(/\r?\n/).entries()) {
       if (/grep\s+(-\w*\s+)*-\w*c/.test(line) && /fill:/.test(line)) {
-        offenders.push(`${slug}: ${line.trim()}`)
+        offenders.push(`skills/${scanned[index]}:${lineNumber + 1}: ${line.trim()}`)
       }
     }
   }
