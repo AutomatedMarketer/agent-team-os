@@ -52,8 +52,9 @@ name the six things that matter:
 | Their work | `agents/<name>/output/` | Where you read what they did |
 | The log | `runs/` | One file per run, forever, in your git history |
 
-If they run `ls` themselves, say that `.claude/` will not appear - names beginning with a dot
-are hidden by default, and `ls -a` shows them.
+If they run `ls` themselves, say that `.claude/` will not appear - `ls` hides any name
+beginning with a dot, and `ls -a` shows them. This is an `ls` habit, not a rule about their
+computer: PowerShell's `Get-ChildItem` and the GitHub web page both show `.claude` unasked.
 
 ### 4. First commit and push
 
