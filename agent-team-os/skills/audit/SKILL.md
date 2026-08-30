@@ -44,6 +44,16 @@ Write it in this shape. Keep the whole thing under a page.
 - **Stale** — exists, but has not run in more than 7 days
 - **Never run** — defined, but there is no run log for it
 - **Not set up** — the agent's connector or knowledge file is empty, so it cannot work yet
+- **Not in use** — the knowledge file says, in words, that this agent does not apply to this
+  owner. Not a gap. Quote the reason in the State cell and **do not list it under "What is
+  missing"**
+
+**The difference between the last two matters more than it looks.** Not all five agents apply to
+everyone — someone who works for the business rather than owning it usually has no prospects and
+no customers of their own, and the course says so on Day 1. An empty `offer-sheet.md` because
+nobody got to it is a gap. An `offer-sheet.md` that says *"I do not sell - that is the
+estimator's job"* is a finished answer, and reporting it as missing teaches the owner to ignore
+your report. **Read the file before deciding which one it is.**
 
 ```markdown
 ## Your business brain
