@@ -17,7 +17,8 @@ running. This command shows the alarm clocks, and only the alarm clocks.
 
 It changes nothing about your routines: it cannot arm, pause, reschedule or delete one. The only
 thing it writes is a snapshot of what it found, into your own repo, so that things which cannot
-call this API - the dashboard, `/arm` - can still see the truth.
+call this API - the dashboard, and node scripts like `npm run check:arming` - can still see the
+truth. `/arm` itself runs in a session and does call it, to confirm a routine it just created.
 
 ## What to do
 
