@@ -61,9 +61,19 @@ So for each shortlist:
 1. Read the owner's exact words for the task.
 2. Read each candidate's own description in full — open the file if the summary is not enough.
 3. Pick the one that actually does that job. **The top-ranked candidate is often not it.**
-4. If none of them does the job, **decline the whole shortlist**: put the task under `gaps:` with
+4. Check whether the candidate is one they switched off - `inUse: false` on the candidate, and
+   the reason is in `agents/<slug>/knowledge/`. If it is, it is not an answer.
+5. If none of them does the job, **decline the whole shortlist**: put the task under `gaps:` with
    a `question` saying what you were offered and why none of it fits. That is allowed, it is
    checked for, and with a one-word floor it is frequently the right answer.
+
+**Never choose an agent they are not using, or a workflow one of them owns.** The engine still
+shows those - hiding them would rerank the shortlist with nothing saying why - but they cannot do
+the job, because the owner said so themselves in that agent's own knowledge file. This is common
+and it is not an edge case: for anyone who works for someone else, `sales` and `customer-service`
+are usually both off, and `agent:customer-service` is exactly the kind of high-scoring candidate
+that comes back top. `check:proposals` refuses it by name. Decline it into `gaps` and say that is
+why - "the thing that would do this is one I switched off" is a real answer and a useful one.
 
 **You may only choose from the shortlist.** Not something else in the catalogue, not something
 that would be nice to have. `proposalFrom()` refuses anything else, and `check:proposals` refuses
@@ -72,6 +82,12 @@ it again. This is not a formality: it is the only reason a model is allowed to c
 **Every choice needs its reason, including a sole candidate.** One line, naming what you rejected
 and what decided it. "It was the only one offered" is a fact about the engine, not a reason to hand
 somebody a worker — and the check will reject the file for it.
+
+**Declining every single task is a valid outcome, not a failed run.** Write `proposals:` with
+nothing under it and put all of them under `gaps:`. The check accepts that, and prints *"Nothing on
+the team matched your week. That is a real answer, not a failed run."* The shipped team was built
+for someone running a business; if they work for one, most of it will not fit, and a gaps list they
+believe is worth more than a team they would never have used.
 
 **Expect to decline a lot.** The engine shortlists anything sharing a single word, precisely so
 that you get to see the right answer when it exists. The cost of that is that most shortlists also
@@ -163,6 +179,7 @@ corrected one layer later, which is exactly what this whole order exists to allo
 - [ ] `proposals.yml` exists, is committed, and `npm run check:proposals` passes
 - [ ] Every shortlisted task is either proposed or declined into `gaps` — none silently dropped
 - [ ] Every proposal carries a `why`, including the sole-candidate ones
+- [ ] Nothing proposed is an agent they switched off, or a workflow one of those owns
 - [ ] Every decline says what was offered and why none of it fits
 - [ ] Every gap the engine found is carried across
 - [ ] You read it back and they said yes or no to each line
