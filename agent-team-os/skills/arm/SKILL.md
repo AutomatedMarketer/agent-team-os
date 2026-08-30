@@ -26,7 +26,10 @@ Three things, and the first one is a blocker.
    colleagues** and that the usage page shows their own account, not the pool - so the number
    they read is a floor, not a budget.
 2. `proposals.yml` must exist and pass `npm run check:proposals`. You arm what was approved, and
-   approval lives in that file.
+   approval lives in that file. **An empty proposals list is a valid file that approves nothing** -
+   common for anyone who works for someone else, whose week the shipped jobs were not built for.
+   If that is where they are, arm nothing, write the reasons, and say plainly that this is a
+   finished lesson rather than a blocked one.
 3. Run `/routines` first so you both know what already exists. Arming a second routine for a job
    that already has one is how a daily brief starts arriving twice.
 
@@ -122,6 +125,7 @@ change for it to be worth a run.
 ## Check
 
 - [ ] They said their run cap out loud before anything was armed
+- [ ] Every armed job traces back to a line in `proposals.yml`, and you named which line
 - [ ] Every armed job was confirmed present by a `list` after its `create`
 - [ ] Every armed job has `armed: true` in its file, committed
 - [ ] Every job left off has `armed: false` **and a written reason**, committed
@@ -137,6 +141,11 @@ change for it to be worth a run.
   `proposals.yml` names it as `workflow:<slug>`, **or** when its `steps:` are skills approved
   there as `skill:<slug>`, **or** when its `owner:` is an agent approved there as `agent:<slug>`.
   Anything else was not approved, and it does not run.
+
+  **`npm run check:arming` now enforces this rather than trusting you.** It refuses an armed job
+  that traces back to nothing, by name, and reports "UNKNOWN" rather than approval when there is
+  no `proposals.yml` at all. This used to be a rule only this file knew, on the single step in the
+  chain that spends money - every other link was re-derived and compared.
 
   This matters because most proposals name a **skill** or an **agent**, not a workflow — a
   proposal is a decision about *work*, and a workflow is how that work gets a clock. `/new-workflow`
