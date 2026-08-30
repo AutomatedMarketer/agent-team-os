@@ -338,3 +338,51 @@ test('no skill file counts fill-markers with grep -c, which undercounts rows car
     'these count fill-markers by line, so they undercount and disagree with the dashboard:\n  ' +
     offenders.join('\n  '))
 })
+
+/* Phase 4 told the installer "Expect `0`" fill markers left in business-brain.md, and then asked
+   eight questions against a file holding fourteen. The six it never mentioned are the verified
+   claims register - three rows of two, laid out as a table, which is exactly why they got read
+   past. Following the phase to the letter therefore FAILED the phase's own Check.
+
+   The grep -c guard above did not catch it, and could not: it checks that a phase counts markers
+   correctly, not that a phase ASKS about the markers it is counting. A correct meter over an
+   incomplete interview still reads non-zero forever.
+
+   The marker lists below were read out of agent-team-template (bd1c11e) shared/*.md, which lives
+   in a different repo, so they cannot be derived here and are declared instead. If the template
+   gains or renames a field, this test goes stale - and it fails loudly when it does, which is the
+   point. Found 2026-08-30 walking Lesson 3 as an employee. */
+
+const BRIEF_PHASE_MARKERS = {
+  '03-about-me.md': [
+    'full-name', 'role', 'one-line-business',
+    'communication-preferences', 'timezone', 'hard-boundaries',
+  ],
+  '04-business-brain.md': [
+    'primary-offer', 'pricing', 'audience', 'problem', 'proof',
+    'competitors', 'lead-sources', 'claims-to-avoid',
+    'verified-claim-1', 'verified-claim-1-source',
+    'verified-claim-2', 'verified-claim-2-source',
+    'verified-claim-3', 'verified-claim-3-source',
+  ],
+  '05-writing-rules.md': [
+    'voice-samples', 'voice-words', 'signature-phrases',
+    'banned-phrases', 'formatting-preferences', 'default-cta',
+  ],
+}
+
+test('every Brief phase asks about every fill marker its own Check counts', async () => {
+  const missing = []
+  for (const [file, markers] of Object.entries(BRIEF_PHASE_MARKERS)) {
+    assert.ok(phaseFiles.includes(file), `${file} is gone - update BRIEF_PHASE_MARKERS`)
+    const body = await read(`agent-team-os/skills/onboard/phases/${file}`)
+    // A phase "asks about" a marker if it names it in backticks anywhere in its prose.
+    const named = new Set([...body.matchAll(/`([a-z0-9-]+)`/g)].map((m) => m[1]))
+    for (const marker of markers) {
+      if (!named.has(marker)) missing.push(`${file}: never asks about \`${marker}\``)
+    }
+  }
+  assert.deepEqual(missing, [],
+    'these phases end with "Expect `0`" but never ask for some of the markers they count:\n  ' +
+    missing.join('\n  '))
+})
