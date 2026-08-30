@@ -33,20 +33,27 @@ If `gh` is not installed or not signed in, the manual path is: open
 `github.com/automatedmarketer/agent-team-template`, press **Use this template**, name it,
 then clone it with the URL GitHub shows.
 
-Private for now. They can make it public later if they want to show it off.
+Private for now. If they own the business, public later is a choice about showing it off. If
+they work for someone else, what goes in `shared/` is their employer's material sitting on
+their own account - there, private is not a default, it is the answer, and it is worth asking
+out loud whose account this should be on before the repo is made.
 
 ### 3. Look at what arrived
 
 Walk them through it in plain English, one line each. Do not read the file tree at them —
-name the five things that matter:
+name the six things that matter:
 
 | What | Where | In one line |
 |---|---|---|
 | The orchestrator | `CLAUDE.md` | The one you talk to |
 | The eight workers | `.claude/agents/` | Research, content, email, customer service, sales - plus editor, security and orchestrator, which keep the team honest |
-| Your business | `shared/` | Empty for now. Phases 3 to 5 fill it. |
+| Your business | `shared/` | The files are there; every field in them is blank. Phases 3 to 5 fill them in. |
+| The jobs | `workflows/` | Nine files, every one switched off with a written reason. Lesson 17 is where they get armed |
 | Their work | `agents/<name>/output/` | Where you read what they did |
 | The log | `runs/` | One file per run, forever, in your git history |
+
+If they run `ls` themselves, say that `.claude/` will not appear - names beginning with a dot
+are hidden by default, and `ls -a` shows them.
 
 ### 4. First commit and push
 
