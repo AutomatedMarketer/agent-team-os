@@ -20,7 +20,7 @@ question is answered against what actually exists. Then ask, one at a time:
 |---|---|---|
 | 1 | "In one sentence, what job does this get done?" | Becomes `name` and the file's slug. If it takes two sentences, it is two workflows. |
 | 2 | "Which of your skills does it run, in what order?" | Becomes `steps`. Every one has to exist in `.claude/skills/` — a missing one gets built first, or the workflow waits. |
-| 3 | "Which agent owns it?" | Becomes `owner`. One of the agents in `.claude/agents/`. Default to whichever agent already does the closest work. |
+| 3 | "Which agent owns it?" | Becomes `owner`. One of the agents in `.claude/agents/`. Default to whichever agent already does the closest work. **Do not offer an agent that is not in use** - one whose knowledge file says in words that it does not apply to this owner, common for `sales` and `customer-service` when the customers are not theirs. The validator only checks that the agent exists, so a workflow owned by a switched-off agent passes validation and then never runs. If the closest work belongs to one, say so and take the next closest. |
 | 4 | "When should it run — a time, a day, or only when you press the button?" | Becomes `trigger`. |
 | 5 | "Where should the result land so you actually read it?" | Becomes `output`. Default `inbox/{date}/<slug>.md` and say why: unique filenames never collide across machines. |
 | 6 | "Will a person read what this makes, or is it just data for another job?" | Decides whether it gets graded. A person reads it, so it ends in `review-draft` and needs a standard - go to the three questions below. |
