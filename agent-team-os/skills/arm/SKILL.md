@@ -22,10 +22,19 @@ Three things, and the first one is a blocker.
 1. **They need to know their run cap.** Arming spends runs on a schedule, forever, whether or not
    anyone reads the output. If they cannot say how many scheduled runs their plan includes, stop
    and send them to `claude.ai/settings/usage`. Do not guess it, and do not arm "just one to see".
+   **If they are on an employer's Team plan, say that part of the cap may be shared with
+   colleagues** and that the usage page shows their own account, not the pool - so the number
+   they read is a floor, not a budget.
 2. `proposals.yml` must exist and pass `npm run check:proposals`. You arm what was approved, and
    approval lives in that file.
 3. Run `/routines` first so you both know what already exists. Arming a second routine for a job
    that already has one is how a daily brief starts arriving twice.
+
+**And one question, once, before the first job:** *"Is this business yours, or do you work for
+someone else?"* If they work for someone else, say plainly that the routine will live on their
+personal account, spend their allowance, and be invisible to everyone they work with - so it
+stops the day they do. That is not a reason to skip it. It is a reason to arm something that
+briefs them rather than something a colleague will come to depend on without knowing it exists.
 
 ## 1. Compare the two lists
 
