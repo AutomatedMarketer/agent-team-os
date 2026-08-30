@@ -376,8 +376,15 @@ test('every Brief phase asks about every fill marker its own Check counts', asyn
   for (const [file, markers] of Object.entries(BRIEF_PHASE_MARKERS)) {
     assert.ok(phaseFiles.includes(file), `${file} is gone - update BRIEF_PHASE_MARKERS`)
     const body = await read(`agent-team-os/skills/onboard/phases/${file}`)
-    // A phase "asks about" a marker if it names it in backticks anywhere in its prose.
-    const named = new Set([...body.matchAll(/`([a-z0-9-]+)`/g)].map((m) => m[1]))
+    /* A phase "asks about" a marker only if it names it inside a QUESTION ROW - a table row
+       carrying a quoted question. Naming it in prose is not asking: the first version of this
+       test accepted any backticked mention anywhere, so a phase could satisfy it with a sentence
+       about the markers it was still failing to ask for. Tightened 2026-08-30. */
+    const questionRows = body
+      .split(/\r?\n/)
+      .filter((line) => line.trimStart().startsWith('|') && line.includes('"'))
+      .join('\n')
+    const named = new Set([...questionRows.matchAll(/`([a-z0-9-]+)`/g)].map((m) => m[1]))
     for (const marker of markers) {
       if (!named.has(marker)) missing.push(`${file}: never asks about \`${marker}\``)
     }
