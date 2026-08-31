@@ -15,7 +15,7 @@ reassurance. If something is missing, say so and say which lesson covers it.
 | `.claude/agents/*.md` | Which agents exist, and what model each declares |
 | `shared/*.md` | Whether the business brain is filled in |
 | `agents/*/knowledge/*.md` | Whether the FAQ and offer sheet are filled in |
-| `runs/**/*.json` | What has actually run, and when |
+| `runs/2*/*.json` | What has actually run, and when. **Not** `runs/**/*.json` — that also pulls in `runs/heartbeat/*.json`, which is not a run at all but one liveness ping per runtime, in a different shape entirely |
 | `.claude/settings.json` | Model and effort at repo level |
 | `git log --format='%an %ad %s'` | Who committed what, and when |
 
