@@ -118,6 +118,14 @@ For `business` or `both`:
 
 Leave `hourly_value` out of the file entirely rather than writing a guess.
 
+**If they gave a rate, ask the currency once**, in the same breath:
+
+> "And that is in which currency? Just the code - USD, GBP, EUR."
+
+Write it as `currency:` beside the rate, exactly as they said it, in a short code with no spaces.
+Everything that prints money prints that code after the number, so a student in Manchester never
+sees a dollar sign. If they gave no rate, do not ask; there is nothing to label.
+
 ## 7. Write it, check it, read it back
 
 Write `ledger.yml` in the repo root. The shape is in `ledger.example.yml` in their repo.
@@ -140,9 +148,12 @@ Your ledger has 2 things to fix:
 
 Fix anything it names, then read the result back to them out loud:
 
-> "Here is your week. Sixteen hours, about two and a half thousand a week. Four of those are
-> ready to hand over, one is parked because nobody acts on it yet, one is a note. Is that
+> "Here is your week. Sixteen hours, about two and a half thousand dollars a week. Four of those
+> are ready to hand over, one is parked because nobody acts on it yet, one is a note. Is that
 > right?"
+
+Say the money in the currency they gave you. If they gave none, say the hours and leave the money
+out of the sentence - the check prints the number bare and says why.
 
 **Their answer to that question is the gate.** If they say the number is wrong, it is wrong -
 change the file, not their mind. This is the correction step the whole design depends on, and
@@ -164,5 +175,7 @@ git commit -m "ledger: where the week actually goes"
 - **A guess written down beats a blank.** Say it is a guess. It can be corrected next quarter.
 - **Never invent a rate**, and never write `0` for one. Absent is a fact; zero is a claim that
   the time is free.
+- **Never invent a currency either.** Ask it, or leave `currency:` out. A guessed `USD` on a
+  ledger from Leeds is the exact mistake this field exists to stop.
 - **Re-run this quarterly.** A ledger is a photograph of one week, and weeks change. Say that
   when you finish, so nobody treats it as permanent.
