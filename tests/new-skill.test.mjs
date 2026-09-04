@@ -179,6 +179,14 @@ test('the review card is written so the task sweep hands it back rather than wor
   const unattended = skill.split(/\n##+ [^\n]*[Uu]nattended[^\n]*\n/)[1] ?? ''
   assert.match(unattended, /open the body with this line:\*\*\s*\n\s*\n\s*> This one needs you, not an agent/,
     'the line is not given as the instruction "open the body with this line", followed by the line itself - mentioning it in passing is not instructing it')
+  // Review reversed the rule - "Leave `for:` out is the old rule; ignore it and always set
+  // for:" - and the substring check stayed green. The instruction has to be the bold opening
+  // of its own line, with nothing in that line turning it around.
+  const forLine = unattended.split(/\r?\n/).find((line) => /\*\*Leave `for:` out/.test(line)) ?? ''
+  assert.ok(/^\s*\*\*Leave `for:` out/.test(forLine),
+    'the instruction to leave for: off the card is not the bold opening of its own line - it has been demoted to a mention')
+  assert.doesNotMatch(forLine, /ignore|old rule|instead|always set|include it|put it in/i,
+    'the line that says to leave for: out goes on to say the opposite')
   assert.ok(/[Ll]eave `for:` out/.test(unattended),
     'nothing plainly says to leave `for:` off the review card')
   assert.ok(/work-the-tasks|task sweep|sweep/i.test(unattended),

@@ -83,9 +83,19 @@ That last row is the general rule: say what to do, not what to avoid.
 
 1. Add the slug to `AGENT_SLUGS` in `scripts/lib/run-log.mjs`
 2. Add an entry to `AGENT_SPECS` in `scripts/lib/agents.mjs` with its model and blocks
-3. Add the slug to `IMPLEMENTED` in `tests/agents.test.mjs`
+3. Add the slug to three test lists, or the suite refuses a ninth agent no matter how good
+   it is: `IMPLEMENTED` in `tests/agents.test.mjs`, `SLUGS` in `tests/orchestrator.test.mjs`,
+   and `SPECIALISTS` in `tests/routing.test.mjs`. If the agent's Finishing section says the
+   artifact and the log go in the same commit - and it should - add its path to
+   `CARRY_THE_RULE` in `tests/commit-override.test.mjs` too; that test says so itself.
 4. Create `agents/<slug>/README.md` and `agents/<slug>/output/`
 5. Add the specialist to the table in `CLAUDE.md` and to `.claude/rules/routing.md`
+6. Three files count the team in words and a test checks each against the folder:
+   `CLAUDE.md` ("seven specialists"), `.claude/rules/routing.md` ("Seven specialists") and
+   `README.md` ("**Eight agents.**"). Move each one up by one.
+7. If it reaches the outside world - the web, an inbox, a customer - it belongs in
+   `docs/safety/draft-only.md` with the others that do, and `tests/safety.test.mjs` pins
+   that count. Nothing here reaches out and stays off that list.
 
 ## Check
 
@@ -116,13 +126,23 @@ instead.
    `sonnet`: it's the cheaper one and the more literal one, and literal is the safer property in
    something nobody has read yet.
 2. **Write the file** exactly as above, and register it exactly as above - the run-log slugs,
-   the specs, the test list, the README and output folder, the routing table. Where you had to
+   the specs, the test lists, the README and output folder, the specialist table in
+   `CLAUDE.md` **and** the rules in `.claude/rules/routing.md` - two files, not one. Where you had to
    choose, choose the smaller, safer option: read-only over writing, drafts over sends, one output
    file over several.
 3. **Run the checks and commit.** `node scripts/sync-prompt-blocks.mjs`,
    `node scripts/build-model-card.mjs`, `node scripts/prompt-audit.mjs` and `npm test`, all
    clean. An agent that fails one of them does not get pushed; fix it or leave nothing behind
    and write a run log saying what failed.
+
+   One kind of failure isn't the agent's fault: the repo counts its own agents. `README.md`
+   says how many there are, and a test checks that number against the folder, so the file you
+   just added makes that test fail until the count catches up. Update the count - that's
+   bookkeeping, and the test's own comment asks for it. A test that still fails once the count
+   is right is the agent failing, and that one you fix or abandon.
+
+   Don't write a run log for a successful build. The review card in the next step is the
+   record. `run-facts.mjs` only knows agent slugs, and this session isn't an agent.
 4. **File a card in `tasks/`** - `tasks/YYYY-MM-DD-review-<slug>.md`, `status: todo` - that
    names the slug, quotes the sentence you were given, and lists every guess you made, one per
    line. That card is the whole safety net: the owner asked for something in one sentence and is

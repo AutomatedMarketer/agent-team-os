@@ -144,8 +144,8 @@ it is the only thing `/match` can see, and an item nothing can describe cannot b
 Two things still want a human hand:
 
 1. If an agent is meant to use it, name the skill in that agent's file under how it works.
-2. If it belongs in the team's own documentation, add a row to the skills table in
-   `CLAUDE.md`.
+2. `README.md` counts the skills and says which are business work. A test checks both
+   numbers, so update them - the count, and the list of names beside it.
 
 ## Check
 
@@ -177,6 +177,15 @@ this instead.
    option: read-only over writing, drafts over sends, one output file over several.
 3. **Run the checks and commit.** A skill that fails `prompt-audit` or `npm test` does not get
    pushed; fix it or leave nothing behind and say why.
+
+   One kind of failure isn't the skill's fault: the repo counts its own skills. `README.md`
+   says how many there are, and a test checks that number against the folder, so the file you
+   just added makes that test fail until the count catches up. Update the count - that's
+   bookkeeping, and the test's own comment asks for it. A test that still fails once the count
+   is right is the skill failing, and that one you fix or abandon.
+
+   Don't write a run log for a successful build. The review card in the next step is the
+   record. `run-facts.mjs` only knows agent slugs, and this session isn't an agent.
 4. **File a card in `tasks/`** — `tasks/YYYY-MM-DD-review-<slug>.md`, `status: todo` — that
    names the slug, quotes the sentence you were given, and lists every guess you made, one per
    line. That card is the whole safety net: the owner asked for something in one sentence and
