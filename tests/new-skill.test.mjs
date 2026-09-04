@@ -60,13 +60,32 @@ test('the example is owner-facing work and is not marked as team tooling', () =>
   assert.equal(audience[1], 'owner', `the example says audience: ${audience[1]}, which is neither owner nor team`)
 })
 
+/* Round two of the same review broke the first version of this test by MUTATION rather than by
+   argument: it swapped the two table rows over, so the document taught that `owner` is the
+   unproposable one - the exact opposite of the truth - and the test stayed green, because it only
+   asked whether the words "never propose" appeared somewhere in the section. Co-occurrence is not
+   a claim. Both rows are now read individually, and each has to carry its own consequence. */
+
 test('it explains what audience actually decides, rather than who runs the skill', () => {
-  assert.ok(/audience: team/.test(skill) && /audience: owner/.test(skill),
-    'it never shows both values, so a writer has nothing to choose between')
   const section = /\n## [^\n]*`?audience`?[^\n]*\n([\s\S]*?)\n## /i.exec(skill)
   assert.ok(section, 'there is no section explaining audience - it is one word that decides proposability')
-  assert.ok(/never (be )?propose|cannot (ever )?be proposed|can never propose|not be offered|never be offered/i.test(section[1]),
-    'the section never says that `team` means /match will never propose it, which is the entire consequence')
+
+  const rowFor = (value) => section[1].split(/\r?\n/)
+    .find((line) => line.trimStart().startsWith('|') && line.includes(`audience: ${value}`))
+
+  const team = rowFor('team')
+  const owner = rowFor('owner')
+  assert.ok(team, 'no table row for `audience: team`')
+  assert.ok(owner, 'no table row for `audience: owner`')
+
+  const NEVER = /never (be )?propose|cannot (ever )?be proposed|can never propose|not be offered|never be offered/i
+  assert.match(team, NEVER,
+    'the `team` row does not say /match will never propose it, which is the entire consequence of the word')
+  assert.doesNotMatch(owner, NEVER,
+    'the `owner` row carries the never-proposed consequence - the two rows are the wrong way round, and the file now teaches the opposite of what the code does')
+  assert.match(owner, /can propose|can be proposed|is proposable/i,
+    'the `owner` row never says /match can propose it')
+
   assert.ok(/silent|nothing tells|no.{0,20}warning|green/i.test(section[1]),
     'it never says the failure is silent - a writer who thinks a wrong value would be caught will not check it')
 })
@@ -150,12 +169,18 @@ test('it has a path for being run unattended from one sentence', () => {
    The template's own escape hatch is "an ask it can't do without you", which stays `todo` with
    the reason in the digest. The card has to say so in its own first line. */
 
+/* Broken by mutation in the same second review: the first version asked only whether three
+   phrases appeared in the section. A rewrite that mentioned the line and then explicitly
+   DISCLAIMED it - "treat that as flavour text, no special opening line required" - kept all three
+   phrases and stayed green while removing the instruction entirely. The phrase now has to appear
+   as a quoted line directly under the sentence that tells the session to open the card with it. */
+
 test('the review card is written so the task sweep hands it back rather than working it', () => {
   const unattended = skill.split(/\n##+ [^\n]*[Uu]nattended[^\n]*\n/)[1] ?? ''
-  assert.ok(/needs you, not an agent/i.test(unattended),
-    'the card body carries no line telling the sweep this is an ask it cannot do without the owner, so it gets routed and worked')
-  assert.ok(/leave `?for:?`? out|no `?for:?`?|without a `?for:?`?/i.test(unattended),
-    'nothing says whether to set `for:` on the review card')
+  assert.match(unattended, /open the body with this line:\*\*\s*\n\s*\n\s*> This one needs you, not an agent/,
+    'the line is not given as the instruction "open the body with this line", followed by the line itself - mentioning it in passing is not instructing it')
+  assert.ok(/[Ll]eave `for:` out/.test(unattended),
+    'nothing plainly says to leave `for:` off the review card')
   assert.ok(/work-the-tasks|task sweep|sweep/i.test(unattended),
     'it never names the sweep that would otherwise pick the card up, so the instruction reads as arbitrary')
 })
