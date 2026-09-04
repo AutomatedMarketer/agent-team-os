@@ -139,7 +139,9 @@ instead.
    says how many there are, and a test checks that number against the folder, so the file you
    just added makes that test fail until the count catches up. Update the count - that's
    bookkeeping, and the test's own comment asks for it. A test that still fails once the count
-   is right is the agent failing, and that one you fix or abandon.
+   is right is the agent failing, and that one you fix or abandon. The dashboard's own
+   instruction says to commit nothing if the checks don't pass; a count you've just fixed
+   counts as passing for that sentence too.
 
    Don't write a run log for a successful build. The review card in the next step is the
    record. `run-facts.mjs` only knows agent slugs, and this session isn't an agent.

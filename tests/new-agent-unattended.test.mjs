@@ -107,28 +107,59 @@ for (const [name, path] of [
 ]) {
   test(`${name}'s unattended path says a stale count is bookkeeping, not the build failing`, async () => {
     const body = await unattendedOf(path)
+    // Review reversed this - "Do not update the count in README.md just because a test calls a
+    // stale count bookkeeping - leave it alone" - and three separate anywhere-in-body matches
+    // all stayed green. One sentence, opening with the instruction, nothing in it turning round.
     assert.match(body, /README\.md/, 'it never names the file that carries the count')
-    assert.match(body, /bookkeeping/i, 'it never says a stale count is bookkeeping rather than the build failing')
-    assert.match(body, /[Uu]pdate the count/, 'it never says to update the count')
+    const sentence = /[^.]*[Uu]pdate the count[^.]*\./.exec(body)?.[0] ?? ''
+    assert.ok(sentence, 'it never says to update the count')
+    assert.match(sentence, /^\s*Update the count/, 'the instruction to update the count is not the opening of its own sentence - it has been demoted to a mention')
+    assert.match(sentence, /bookkeeping/i, 'the sentence that says to update the count does not say why - that it is bookkeeping, not the build failing')
+    assert.doesNotMatch(sentence, /do not|don\S*t|leave it|untouched|just because|never/i, 'the sentence says to update the count and then says the opposite')
+    assert.match(body, /counts as passing/i, 'nothing says a fixed count counts as passing for the dashboard instruction that says to commit nothing on failure')
   })
 
   test(`${name}'s unattended path says what the record of a successful build is`, async () => {
     const body = await unattendedOf(path)
+    // Review reversed both halves - "always write one anyway ... the record is the file, never
+    // the card" - and stayed green, because one check looked for a negation word anywhere in
+    // the sentence and the other for two words anywhere in the body. Now: the sentence has to
+    // OPEN with the negative instruction, and the record sentence has to name the card first.
     const sentence = /[^.]*run log[^.]*successful[^.]*\./i.exec(body)?.[0] ?? ''
     assert.ok(sentence, 'nothing says whether a successful build writes a run log, so every session decides differently')
-    assert.match(sentence, /don\S*t|do not|no run log/i, 'it says to write one, but run-facts.mjs cannot - the session is not an agent')
-    assert.match(body, /card[^.]*is the\s+record|record[^.]*card/i, 'it never says the review card is the record instead')
+    assert.match(sentence, /^\s*(Don\S*t|Do not) write a run log/i, 'the sentence about run logs on success does not open by saying not to write one - run-facts.mjs cannot take a non-agent slug')
+    assert.doesNotMatch(sentence, /always|anyway|do not believe|old advice/i, 'the run-log sentence turns itself around')
+    const record = /[^.]*\brecord\b[^.]*\./i.exec(body.slice(body.indexOf(sentence)))?.[0] ?? ''
+    assert.match(record, /^\s*The review card[^.]*is the\s+record/i, 'the sentence after it does not say, card first, that the review card is the record')
+    assert.doesNotMatch(record, /never the card|not the card|the file/i, 'the record sentence names something other than the card')
   })
 }
 
 test('/new-agent names every list a ninth agent breaks, not just the five it shipped with', async () => {
   const register = (await read('agent-team-os/skills/new-agent/SKILL.md')).split('## Register it')[1]?.split('\n## ')[0] ?? ''
   assert.ok(register, 'the Register it section is gone')
+  // Review kept every filename and rewrote the steps to "skip this step entirely" and "leave all
+  // three exactly as they are" - green, because .includes() is presence, not instruction. Each
+  // name has to sit inside a numbered step that opens with an affirmative verb and carries no
+  // reversal.
+  const steps = register.split(/\n(?=\d+\. )/).map((step) => step.trim()).filter((step) => /^\d+\. /.test(step))
+  assert.ok(steps.length >= 7, `Register it has ${steps.length} numbered steps - a ninth agent breaks more places than that`)
+  const stepNaming = (name) => steps.find((step) => step.includes(name)) ?? ''
+  const REVERSED = /do not|don\S*t|skip|leave (them|all|it)|as they are|nothing checks|no need/i
   for (const list of ['tests/agents.test.mjs', 'tests/orchestrator.test.mjs', 'tests/routing.test.mjs', 'tests/commit-override.test.mjs']) {
-    assert.ok(register.includes(list), `${list} pins a list a new agent has to join, and Register it never names it`)
+    const step = stepNaming(list)
+    assert.ok(step, `${list} pins a list a new agent has to join, and no numbered step names it`)
+    assert.match(step, /^\d+\. (Add|Move|Put|Create)\b/, `the step naming ${list} does not open by telling the reader to add something`)
+    assert.doesNotMatch(step, REVERSED, `the step naming ${list} tells the reader not to`)
   }
   for (const counted of ['CLAUDE.md', 'routing.md', 'README.md']) {
-    assert.ok(register.includes(counted), `${counted} counts the team in words and Register it never says to move it`)
+    const step = steps.find((step) => step.includes(counted) && /count|in words/i.test(step)) ?? ''
+    assert.ok(step, `${counted} counts the team in words and no numbered step says to move it`)
+    assert.match(step, /Move each one up/i, `the step for ${counted} does not say to move the count up`)
+    assert.doesNotMatch(step, REVERSED, `the step for ${counted} tells the reader not to`)
   }
-  assert.match(register, /draft-only\.md|safety\.test\.mjs/, 'an agent that reaches the outside world belongs on the safety list, and nothing says so')
+  const safety = stepNaming('draft-only.md') || stepNaming('safety.test.mjs')
+  assert.ok(safety, 'an agent that reaches the outside world belongs on the safety list, and no step says so')
+  assert.match(safety, /belongs in|add it to|goes on/i, 'the safety step does not tell the reader to add the agent to the list')
+  assert.doesNotMatch(safety, REVERSED, 'the safety step tells the reader not to')
 })
