@@ -348,7 +348,9 @@ test('no skill file counts fill-markers with grep -c, which undercounts rows car
    correctly, not that a phase ASKS about the markers it is counting. A correct meter over an
    incomplete interview still reads non-zero forever.
 
-   The marker lists below were read out of agent-team-template (bd1c11e) shared/*.md, which lives
+   The marker lists below were read out of agent-team-template shared/*.md (bd1c11e, plus the four
+   business-brain fields added 2026-09-10: tried-before, objections, twelve-month-goal,
+   tired-of-explaining - the questions the Co-Work onboarding asked and this one did not), which lives
    in a different repo, so they cannot be derived here and are declared instead. If the template
    gains or renames a field, this test goes stale - and it fails loudly when it does, which is the
    point. Found 2026-08-30 walking Lesson 3 as an employee. */
@@ -359,8 +361,8 @@ const BRIEF_PHASE_MARKERS = {
     'communication-preferences', 'timezone', 'hard-boundaries',
   ],
   '04-business-brain.md': [
-    'primary-offer', 'pricing', 'audience', 'problem', 'proof',
-    'competitors', 'lead-sources', 'claims-to-avoid',
+    'primary-offer', 'pricing', 'audience', 'problem', 'tried-before', 'objections', 'proof',
+    'competitors', 'lead-sources', 'twelve-month-goal', 'tired-of-explaining', 'claims-to-avoid',
     'verified-claim-1', 'verified-claim-1-source',
     'verified-claim-2', 'verified-claim-2-source',
     'verified-claim-3', 'verified-claim-3-source',

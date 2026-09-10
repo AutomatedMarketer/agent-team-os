@@ -2,7 +2,7 @@
 
 **The plugin that builds and runs an AI agent team.**
 
-Eleven commands for Claude Code. They set up a team repo, measure where your week actually goes,
+Twelve commands for Claude Code. They set up a team repo, measure where your week actually goes,
 propose a team from those numbers, and switch on only the jobs you approved.
 
 This repo is **the tooling**. Your team lives in a separate repo of your own — see
@@ -17,7 +17,7 @@ asked — and wants to be able to check every claim the system makes about what 
 
 ---
 
-## The eleven commands
+## The twelve commands
 
 **Setting up**
 
@@ -46,6 +46,7 @@ asked — and wants to be able to check every claim the system makes about what 
 | Command | What it does |
 |---|---|
 | `/audit` | Checks your team repo and reports what works, what is stale, and what was never finished |
+| `/level-up` | Five questions about your week, then the one next move with the most leverage. Never a list |
 | `/new-agent` | Adds a specialist, written to the same standard as the ones that shipped |
 | `/new-workflow` | Turns a conversation into one validated job file. You never write YAML |
 | `/new-skill` | Adds one named capability to the team. Writing it schedules nothing |
@@ -93,7 +94,7 @@ If you are working on this repo rather than using it:
 npm test
 ```
 
-75 tests, no dependencies to install. They cover the deterministic helpers the skills shell out to
+79 tests, no dependencies to install. They cover the deterministic helpers the skills shell out to
 — the routine formatter's cron parsing and timezone arithmetic, mostly, because doing that by hand
 is how a monthly job gets reported as daily.
 
@@ -143,8 +144,8 @@ ledger still has problems in it.
 ## What is in this repo
 
 ```
-agent-team-os/skills/     the eleven commands
-tests/                    75 tests, no dependencies
+agent-team-os/skills/     the twelve commands
+tests/                    79 tests, no dependencies
 ```
 
 Each command is a `SKILL.md` — plain instructions Claude follows, which you can read and change.

@@ -86,7 +86,7 @@ are already in front of you.
 
 **Do not use `grep -c` for this.** It counts *lines that contain* a match, not matches, and
 `business-brain.md` puts two markers on one row in the verified-claims table — so `grep -c`
-reports 11 where the truth is 14. The dashboard counts occurrences, so a `-c` count makes your
+reports 15 where the truth is 18. The dashboard counts occurrences, so a `-c` count makes your
 report and their board disagree about the same repo, which is the one thing an audit must never do.
 
 Anything above zero is an unfilled field. Name the specific markers, not just the count —

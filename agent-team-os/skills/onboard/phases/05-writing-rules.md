@@ -28,6 +28,20 @@ they only have time for one question, this is the one.
 If they say they have nothing written: ask them to write two sentences answering "what do
 you do?" as if texting a friend. That is a sample.
 
+## Do not let a vague answer through
+
+Adjectives fit ten thousand people. One follow-up, then write what they gave you:
+
+| They said | Ask once |
+|---|---|
+| **`voice-samples`:** a description of how they write, not text they wrote | "That is a description. Open your sent folder and paste the last email over three lines that you typed yourself." |
+| **`voice-words`:** "professional", "friendly", "authentic" | "Everyone says those. What would a client say about how you write if they were being honest?" |
+| **`banned-phrases`:** "nothing really" | "Read the first sample back. Is there a sentence in it you would never write? Start there - and if there is genuinely nothing, write None." |
+| **`default-cta`:** "it depends" | "Look at the last three things you sent that asked for something. What did the last line say?" |
+
+Write the second answer in their words. If it is still broad, write it anyway and move on;
+`/level-up` will find the thin field later.
+
 ## Check
 
 ```bash

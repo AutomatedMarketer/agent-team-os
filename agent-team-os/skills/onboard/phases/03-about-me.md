@@ -25,6 +25,21 @@ is already saved.
 If someone gives a one-word answer, ask one follow-up, then move on. This is not a
 psychology session.
 
+## Do not let a vague answer through
+
+A vague answer clears the Check and leaves the agent no better informed. One follow-up, then
+write what they gave you:
+
+| They said | Ask once |
+|---|---|
+| **`one-line-business`:** "I help businesses grow" | "Which businesses, and grow what? Fill both blanks with something you could point at." |
+| **`communication-preferences`:** "whatever works" | "Last time something reported back to you and it annoyed you - was it too long, or too short?" |
+| **`timezone`:** a country, or "normal hours" | "Which city, and what time does your working day actually start and stop?" |
+| **`hard-boundaries`:** "use common sense" | "Name one thing that, if an agent did it without asking, you would switch the whole team off." |
+
+Write the second answer in their words. If it is still broad, write it anyway and move on;
+`/level-up` will find the thin field later.
+
 ## Writing it
 
 Replace each `<!-- fill: name -->` line with the answer, in their words, not yours. Keep
