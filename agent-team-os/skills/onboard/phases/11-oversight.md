@@ -18,9 +18,9 @@ technical — the bookmark at the end is not a nicety, it is the retention step.
 
 You are the guide, not the operator. Every step here happens in **their** browser, on
 **their** accounts — GitHub, Vercel, their phone. You tell them exactly where to click and
-what to type; you do not run deploy commands, and nothing from this phase gets written
+what to type; you do not run deploy commands, and nothing from steps 1 to 7 gets written
 into a file in the repo. The dashboard's settings live in Vercel's own settings screen and
-nowhere else.
+nowhere else. The one exception is step 9, where their subscription prices go into `stack.yml`.
 
 ## Steps
 
@@ -115,18 +115,68 @@ The closing move of the whole install:
 Wait for them to tell you what they saw. This is the moment the course was building to —
 give it a beat before closing out.
 
+### 8. Which computer is always on?
+
+Ask this on its own, then wait. Questions 8 and 9 are asked one at a time, never together.
+
+> "The dashboard can show how much of your Claude and Codex plan limits you have used, and
+> when they reset. A small script on one of your computers reads those numbers and saves them
+> to your repo. Is there a computer that is on all day, every day? A Mac Mini or a laptop that
+> never sleeps would do."
+
+- **A Mac that is always on** — it can run the script by itself every three hours. Point them
+  to `.agent-team/status/README.md` in their team repo, and walk the Mac schedule steps in it
+  together. Do not set up a schedule on Windows in this phase.
+- **No always-on computer, or not sure** — that is fine. They run `/snapshot` by hand when they
+  want fresh numbers. Show them once now: run `/snapshot`, and read the result back to them.
+
+Do not ask which Claude plan they are on. Phase 1 already has it. Write down which way they
+chose in `.agent-team/onboarding-state.md` as `usage-snapshots: mac-schedule` or
+`usage-snapshots: by-hand`.
+
+### 9. What do they pay each month?
+
+Only after step 8 is answered:
+
+> "Last question for this screen. What do you pay each month for your AI subscriptions?
+> Claude, ChatGPT, anything like that. Tell me the name, the price, and whether it is monthly
+> or yearly. A rough number is fine. Skip any you would rather not say."
+
+Take them one at a time. For each, write one entry under `subscriptions:` in `stack.yml`:
+
+```yaml
+subscriptions:
+  - name: Claude Max
+    service: claude
+    price: 100
+    currency: USD
+    per: month
+```
+
+- `name` is what they call it. `service` is a short lowercase word for the company.
+- `price` is a number with no currency sign. `currency` is a three-letter code like USD or EUR.
+- `per` is `month` or `year`.
+
+The header of `stack.yml` says never to edit it by hand. Writing these entries from the
+person's own answer is the approved exception, so do it yourself and do not ask them to open the
+file. Change only the `subscriptions:` block, nothing else in the file. If the block is missing,
+add it at the end. If they decline to answer, leave it as `subscriptions: []` and move on.
+
+Prices are the person's own words, so write them as given. Never look a price up for them.
+
 ## Check
 
 - The dashboard loads at their Vercel URL with their agents and workflows on screen
 - The icon is on their phone's home screen
 - They confirm, in their own words: they dispatched a job from the phone and watched it
   run to a result
+- Step 8 is answered and recorded in `.agent-team/onboarding-state.md`, and step 9 is answered or declined
 - No token, key, or trigger URL appears in any file in the repo or in this conversation
 
 ## Close out
 
 ```bash
-git add .agent-team/
+git add .agent-team/ stack.yml
 git commit -m "onboard: phase 11, oversight"
 git push
 ```
