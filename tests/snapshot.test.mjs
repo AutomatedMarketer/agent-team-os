@@ -64,3 +64,15 @@ test('phase 11 does not ask for the Claude plan again - phase 1 has it', () => {
   assert.match(phase, /phase 1/i)
   assert.ok(!/which (claude )?plan are you on/i.test(phase))
 })
+
+// The collector only pushes from a person's own copy when the push would carry the snapshot
+// alone, to the default branch. The skill must not promise more than that, and must tell the
+// person what to do when it commits without pushing.
+test('/snapshot says when it will not push, and that it tells them why', () => {
+  assert.match(snapshot, /other (commits|work)[^.]*not (yet )?pushed|unpushed/i)
+  assert.match(snapshot, /another branch|not on (the )?(main|default) branch/i)
+  assert.match(snapshot, /(commits|saves) the snapshot[^.]*(but )?(does not|doesn't|won't) push/i)
+  assert.match(snapshot, /says why|tells them why|tell them (what|why)/i)
+  // The old promise said nothing about pushing at all, while the script pushed everything.
+  assert.match(snapshot, /pushes only the snapshot|push(es)? (it )?only when/i)
+})

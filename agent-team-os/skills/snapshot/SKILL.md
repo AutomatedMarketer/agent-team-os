@@ -26,6 +26,10 @@ It saves percentages and times only. No logins, no tokens, no message text.
   the pieces separately to get the file written anyway.
 - **Commit only its own paths.** `--commit` saves just the usage file. Anything else the person
   has changed in the repo stays untouched.
+- **It pushes only when that push would carry the snapshot alone.** If they are on another
+  branch (not the main branch the dashboard reads), or they have other commits not yet pushed,
+  the script commits the snapshot but does not push, and says why. Tell them what it said, in
+  plain words. Do not push for them - a push would send their other work too.
 - **Do not push for them if the push is refused.** Say so and let them decide.
 
 ## What to do
@@ -71,4 +75,5 @@ hours shows as out of date, so run this again when they want fresh numbers.
 | `scripts/collect-status.mjs` not found | Not in the team repo root, or the repo predates this script. Ask them to pull the latest template changes |
 | The script names a field and refuses | Report the field name. Stop. Do not retry with the check turned off |
 | Every source says not found | The apps may not be signed in on this computer. Ask them to open Claude Code or Codex, sign in, and run `/snapshot` again |
+| "committed here but was not pushed, because ..." | Not an error. Read them the reason. If they are on another branch, they can switch to main and run `/snapshot` again. If they have other unpushed work, they push when that work is ready |
 | The push was refused | The usage file is saved on this computer. Tell them to pull, then push, or ask for help |
