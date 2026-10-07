@@ -87,3 +87,15 @@ test('/snapshot names every case where the snapshot is committed but not pushed'
   assert.match(snapshot, /template/i)
   assert.match(snapshot, /no remote called (`)?origin(`)?/i)
 })
+
+// The collector's push only lands if the team repo still holds exactly what this copy last
+// fetched. When it does not - the repo moved, a commit was taken off it, or pushes go to another
+// repo - the snapshot is held back with "fetch or pull, then take the snapshot again". The skill
+// must say that, and must not tell the person to push it themselves: that push is exactly the one
+// the collector refused to make.
+test('/snapshot passes on "fetch or pull, then take the snapshot again" instead of pushing', () => {
+  assert.match(snapshot, /changed since (they|this copy|their copy) last fetched/i)
+  assert.match(snapshot, /fetch or pull/i)
+  assert.match(snapshot, /different repo/i)
+  assert.doesNotMatch(snapshot, /tell them to pull, then push/i)
+})

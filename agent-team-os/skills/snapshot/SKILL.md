@@ -31,10 +31,14 @@ It saves percentages and times only. No logins, no tokens, no message text.
   - they are on another branch (not the main branch the dashboard reads);
   - their copy has other commits the team repo's main does not have yet - even when git says
     they are up to date, because their branch follows the template's repo or another branch;
-  - their copy has no remote called `origin`, or has never fetched the team repo's main.
+  - their copy has no remote called `origin`, or has never fetched the team repo's main;
+  - their copy is behind the team repo's main;
+  - the team repo has changed since their copy last fetched it (for example a commit was taken
+    off it), or their pushes go to a different repo than their fetches. The script then says to
+    fetch or pull, then take the snapshot again.
 
-  Tell them what it said, in plain words. Do not push for them - a push would send their other
-  work too.
+  Tell them what it said, in plain words. Do not push for them - a push could send their other
+  work too, or put back a commit someone removed.
 - **Do not push for them if the push is refused.** Say so and let them decide.
 
 ## What to do
@@ -81,4 +85,4 @@ hours shows as out of date, so run this again when they want fresh numbers.
 | The script names a field and refuses | Report the field name. Stop. Do not retry with the check turned off |
 | Every source says not found | The apps may not be signed in on this computer. Ask them to open Claude Code or Codex, sign in, and run `/snapshot` again |
 | "committed here but was not pushed, because ..." | Not an error. Read them the reason. If they are on another branch, they can switch to main and run `/snapshot` again. If they have other unpushed work, they push when that work is ready |
-| The push was refused | The usage file is saved on this computer. Tell them to pull, then push, or ask for help |
+| "fetch or pull, then take the snapshot again" | The usage file is committed on this computer but not pushed. Help them fetch or pull, then run `/snapshot` again. Do not push the old snapshot commit yourself |
