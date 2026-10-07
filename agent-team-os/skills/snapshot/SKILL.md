@@ -26,10 +26,15 @@ It saves percentages and times only. No logins, no tokens, no message text.
   the pieces separately to get the file written anyway.
 - **Commit only its own paths.** `--commit` saves just the usage file. Anything else the person
   has changed in the repo stays untouched.
-- **It pushes only when that push would carry the snapshot alone.** If they are on another
-  branch (not the main branch the dashboard reads), or they have other commits not yet pushed,
-  the script commits the snapshot but does not push, and says why. Tell them what it said, in
-  plain words. Do not push for them - a push would send their other work too.
+- **It pushes only when that push would carry the snapshot alone.** Otherwise the script
+  commits the snapshot but does not push, and says why. That happens when:
+  - they are on another branch (not the main branch the dashboard reads);
+  - their copy has other commits the team repo's main does not have yet - even when git says
+    they are up to date, because their branch follows the template's repo or another branch;
+  - their copy has no remote called `origin`, or has never fetched the team repo's main.
+
+  Tell them what it said, in plain words. Do not push for them - a push would send their other
+  work too.
 - **Do not push for them if the push is refused.** Say so and let them decide.
 
 ## What to do

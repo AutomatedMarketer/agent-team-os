@@ -95,7 +95,7 @@ If you are working on this repo rather than using it:
 npm test
 ```
 
-88 tests, no dependencies to install. They cover the deterministic helpers the skills shell out to
+89 tests, no dependencies to install. They cover the deterministic helpers the skills shell out to
 — the routine formatter's cron parsing and timezone arithmetic, mostly, because doing that by hand
 is how a monthly job gets reported as daily.
 
@@ -146,7 +146,7 @@ ledger still has problems in it.
 
 ```
 agent-team-os/skills/     the thirteen commands
-tests/                    88 tests, no dependencies
+tests/                    89 tests, no dependencies
 ```
 
 Each command is a `SKILL.md` — plain instructions Claude follows, which you can read and change.

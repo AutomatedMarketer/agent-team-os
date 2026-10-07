@@ -69,10 +69,21 @@ test('phase 11 does not ask for the Claude plan again - phase 1 has it', () => {
 // alone, to the default branch. The skill must not promise more than that, and must tell the
 // person what to do when it commits without pushing.
 test('/snapshot says when it will not push, and that it tells them why', () => {
-  assert.match(snapshot, /other (commits|work)[^.]*not (yet )?pushed|unpushed/i)
+  assert.match(snapshot, /other (commits|work)[^.]*(not (yet )?pushed|does not have)|unpushed/i)
   assert.match(snapshot, /another branch|not on (the )?(main|default) branch/i)
   assert.match(snapshot, /(commits|saves) the snapshot[^.]*(but )?(does not|doesn't|won't) push/i)
   assert.match(snapshot, /says why|tells them why|tell them (what|why)/i)
   // The old promise said nothing about pushing at all, while the script pushed everything.
   assert.match(snapshot, /pushes only the snapshot|push(es)? (it )?only when/i)
+})
+
+// "Not yet pushed" was not the whole story: a copy that follows the template's own repo, or
+// another branch, can look up to date in git and still hold commits the team repo has never seen.
+// The skill must name those cases and the missing-origin case, so the model does not "fix" a
+// held-back push by pushing.
+test('/snapshot names every case where the snapshot is committed but not pushed', () => {
+  assert.match(snapshot, /team repo('s main)? does not have( yet)?/i)
+  assert.match(snapshot, /up to date/i)
+  assert.match(snapshot, /template/i)
+  assert.match(snapshot, /no remote called (`)?origin(`)?/i)
 })
