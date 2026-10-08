@@ -162,6 +162,13 @@ test('/snapshot names each source by what the file says, the tap as claude-code-
   assert.doesNotMatch(snapshot, /claude-code-saved` both for the tap/)
 })
 
+// The board's chip on the tap's reading says "From Claude Code" (agent-cockpit public/index.html);
+// the skill must quote that, not the old "from Claude Code's status line".
+test('/snapshot quotes the board chip exactly: "From Claude Code"', () => {
+  assert.ok(snapshot.includes('"From Claude Code"'))
+  assert.ok(!snapshot.includes('from Claude Code’s status line'))
+})
+
 // The decided order (template): the tap wins only under 30 minutes old, then the live call, then
 // the tap up to 6 hours, then Claude Code's saved file. The tap carries only the 5-hour and weekly
 // windows, so a per-model weekly meter needs a backup source.

@@ -117,7 +117,8 @@ Open the file it wrote, `.agent-team/status/usage/<computer-slug>.json`, and tel
 If a reading says unavailable, say that. Do not fill in a number.
 
 **Which source it was.** The file names it. `claude-code-statusline` is the tap's reading - the
-official numbers, which the dashboard shows as "from Claude Code’s status line". `unofficial-live`
+official numbers, which the dashboard shows with a "From Claude Code" chip (its Why? line names the
+status line). `unofficial-live`
 is the live call and `claude-code-saved` is Claude Code's own saved file; both are backups, labelled
 unofficial. Under the Claude limits line, the script's printed summary also lists every source it
 tried, in order. `- status line: found (over 30 minutes old, so the live call went first)` means
