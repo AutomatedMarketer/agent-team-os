@@ -200,3 +200,62 @@ test('/snapshot and phase 11 say the tap runs from a copy that a pull does not c
     assert.match(doc, /--remove`?[^.]*deletes? the copy/i, `${name} does not say --remove deletes the copy`)
   }
 })
+
+// --- Phase 5: the Connections wall ---------------------------------------------------------------
+//
+// The same collector now writes a second file, the Connections wall: installed tools, and the
+// servers and plugins Claude Code and Codex have, by name only. To find those names it reads the
+// files that also hold every server's address, command, keys and environment. The collector keeps
+// the names and nothing else; a model following this skill must not go and look for itself. So the
+// skill names every file it never opens, and the two commands it never runs.
+
+const flatSnapshot = snapshot.replace(/\s+/g, ' ')
+
+test('/snapshot fills the Connections wall too, and points to its guide', () => {
+  assert.match(snapshot, /\.agent-team\/status\/connections\//)
+  assert.match(snapshot, /--only connections/)
+  assert.match(snapshot, /docs\/guides\/connections-wall\.md/)
+  assert.match(snapshot, /^description: .*connections/im)
+  assert.match(flatSnapshot, /names only/i)
+})
+
+test('/snapshot lists every file it never opens, the connections ones included', () => {
+  const start = snapshot.indexOf('## Files you never open')
+  assert.ok(start > 0, 'no section listing the files the skill never opens')
+  const section = snapshot.slice(start, snapshot.indexOf('\n## ', start + 1))
+  for (const file of [
+    '~/.claude/.credentials.json',
+    '~/.claude.json',
+    '~/.claude/settings.json',
+    '~/.claude/mcp-needs-auth-cache.json',
+    '~/.claude/plugins/installed_plugins.json',
+    '.mcp.json',
+    '~/.codex/auth.json',
+    '~/.codex/config.toml',
+    'Keychain'
+  ]) {
+    assert.ok(section.includes(file), `the list of files never opened leaves out ${file}`)
+  }
+  assert.match(section, /Hermes/)
+  assert.match(section.replace(/\s+/g, ' '), /never (open|read)/i)
+})
+
+test('/snapshot never runs `claude mcp list` or `hermes` itself', () => {
+  assert.match(flatSnapshot, /never run `claude mcp list` yourself/i)
+  assert.match(flatSnapshot, /never run `hermes`/i)
+  // The reasons, so the rule survives a model that wants to "just check".
+  assert.match(flatSnapshot, /prints (each|every) server's (command|address)/i)
+  assert.match(flatSnapshot, /not read-only/i)
+})
+
+test('/snapshot reads the wall back in plain words, and never calls anything proved', () => {
+  const start = snapshot.indexOf('### Reading back the Connections wall')
+  assert.ok(start > 0, 'no section on reading the wall back')
+  const section = snapshot.slice(start, snapshot.indexOf('\n### ', start + 1)).replace(/\s+/g, ' ')
+  for (const word of ['Connected', 'Needs sign-in', 'Failed', 'Not checked', 'Could not check']) assert.ok(section.includes(word), `the read-back leaves out ${word}`)
+  assert.match(section, /Needs sign-in[^.]*not a (failure|problem)/i)
+  assert.match(section, /hidden/)
+  assert.match(section, /Proved/)
+  assert.match(section, /never (say|call|mark)[^.]*proved/i)
+  assert.match(section, /2 minutes/)
+})

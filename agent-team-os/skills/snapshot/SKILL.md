@@ -1,6 +1,6 @@
 ---
 name: snapshot
-description: Takes a reading of your AI plan usage (how much of each limit is used and when it resets) and saves it into your team repo so the dashboard can show it. Trigger on /snapshot, take a snapshot, update my usage, refresh the usage meters, set up my usage meters, or how much of my plan have I used.
+description: Takes a reading of your AI plan usage (how much of each limit is used and when it resets) and saves it into your team repo so the dashboard can show it. Trigger on /snapshot, take a snapshot, update my usage, refresh the usage meters, set up my usage meters, how much of my plan have I used, update my connections, or fill the connections wall.
 ---
 
 # Snapshot - how much of your plan is used
@@ -14,6 +14,12 @@ hours instead. See `.agent-team/status/README.md` in your team repo. This comman
 everyone else, and for a quick refresh any time.
 
 It saves percentages and times only. No logins, no tokens, no message text.
+
+The same script also fills the **Connections wall**: which AI tools are installed here and their
+versions, and which servers and plugins Claude Code and Codex have - **names only**, and whether
+each one connects. It saves that in a second file, `.agent-team/status/connections/<computer>.json`.
+The guide for students is `docs/guides/connections-wall.md` in the team repo, and the technical
+side is `docs/guides/connections-wall-how-it-works.md`.
 
 The step-by-step student guide is `docs/guides/usage-meters.md` in the team repo, and how it all
 works is `docs/guides/usage-meters-how-it-works.md`. Point people there.
@@ -56,11 +62,33 @@ The status line runs a **copy of the tap**, not the team repo: it runs after eve
 permission prompt, so code there must not be whatever was last pushed. A pull does not change the
 copy. To take a newer tap, they run the installer again - after reading what changed in it.
 
+## Files you never open
+
+The script reads these files privately and keeps only names and numbers. They also hold sign-ins,
+keys, every server's address and command, and your folders. You have no reason to look, so you
+never open, read or print any of them - not to check a name, not to "help":
+
+- `~/.claude/.credentials.json` and the **Keychain** (the Mac's password store) - the Claude sign-in
+- `~/.claude.json` - your servers' addresses and commands, your projects, your account
+- `~/.claude/settings.json` - your settings, which can hold keys
+- `~/.claude/mcp-needs-auth-cache.json` and `~/.claude/plugins/installed_plugins.json`
+- any plugin's `.mcp.json` or `plugin.json`
+- `~/.codex/auth.json` - the Codex sign-in
+- `~/.codex/config.toml` - Codex's servers, with their commands and settings
+- Hermes's files (`~/.hermes`, or `%LOCALAPPDATA%\hermes` on Windows) - its keys, memory and chats
+
+If someone asks what is in them, say the wall shows the names, and point them to the guide.
+
 ## Rules - read these first
 
 - **Never open, read or print the credentials files.** That means `~/.claude/.credentials.json`,
   `~/.claude.json`, `~/.codex/auth.json`, and the Keychain (the Mac's password store). The
   script handles them privately and prints nothing secret. You have no reason to look, so do not.
+- **Never run `claude mcp list` yourself.** It prints each server's command or address, with
+  whatever keys are in them, into this conversation. The script runs it safely and keeps only each
+  name and whether it connects.
+- **Never run `hermes`**, not even `hermes --version`. It is not read-only: run once to read its
+  version, it tried to update itself. The script reads Hermes's version from its files instead.
 - **Never edit `~/.claude/settings.json` yourself.** Installing the tap changes it, so the
   installer does that: it changes one key, backs the file up first, and can undo itself. Only run
   it after the person says yes.
@@ -68,7 +96,8 @@ copy. To take a newer tap, they run the installer again - after reading what cha
   in it looks like a secret. If that happens, tell the person which field it named, and stop.
   Never work around it: do not edit the file by hand, do not skip the check, do not run
   the pieces separately to get the file written anyway.
-- **Commit only its own paths.** `--commit` saves just the usage file. Anything else the person
+- **Commit only its own paths.** `--commit` saves just the usage file and the connections file,
+  in one commit. Anything else the person
   has changed in the repo stays untouched.
 - **It pushes only when that push would carry the snapshot alone.** Otherwise the script
   commits the snapshot but does not push, and says why. That happens when:
@@ -104,6 +133,10 @@ node scripts/collect-status.mjs --computer "<label>" --commit
 
 Add `--dry-run` first if they want to see what it would save without saving anything.
 
+It fills both the usage meters and the Connections wall. The connections part asks every server
+whether it works, so it can take up to 2 minutes - tell them that before it starts. For the wall
+only, add `--only connections`; for the meters only, `--only usage`.
+
 ### 3. Read it back in plain words
 
 Open the file it wrote, `.agent-team/status/usage/<computer-slug>.json`, and tell them:
@@ -126,6 +159,25 @@ the tap had a reading but the live call was tried first; the file's source says 
 the status line line says `not found`, the tap is not installed - offer it as above. If it says
 `unavailable`, read them the reason; usually Claude Code has not been used on this computer for
 over 6 hours.
+
+### Reading back the Connections wall
+
+Open `.agent-team/status/connections/<computer-slug>.json` (the file the script wrote - not the
+files it read) and say, in plain words:
+
+- **Tools**: which are **Found** (with the version), **Not found**, or **Could not check** (it may
+  be there, but the script could not ask it safely - on Windows the Claude and ChatGPT apps always
+  say this).
+- **Servers**: how many are **Connected**, and name any that **Failed** - they can type `/mcp` in
+  Claude Code to see why. **Needs sign-in** is not a failure: some are left signed out on purpose,
+  and the wall shows them in grey. **Not checked** means the live check did not run; read them its
+  reason from the `live` line.
+- **Left out**: `projectServers` are servers of one project, counted but never named. `hidden`
+  counts names that looked like a secret or an email, so they were not saved. Say the numbers, not
+  that anything is wrong.
+
+Never say or mark anything as **Proved**. Proved comes only from their connections register, after
+they have tested a connection by hand. Found is not proved. The live check can take up to 2 minutes.
 
 ### 4. Say what happens next
 
