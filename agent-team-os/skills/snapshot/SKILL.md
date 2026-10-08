@@ -1,6 +1,6 @@
 ---
 name: snapshot
-description: Takes a reading of your AI plan usage (how much of each limit is used and when it resets) and saves it into your team repo so the dashboard can show it. Trigger on /snapshot, take a snapshot, update my usage, refresh the usage meters, set up my usage meters, how much of my plan have I used, update my connections, or fill the connections wall.
+description: Takes a reading of your AI plan usage (how much of each limit is used and when it resets) and saves it into your team repo so the dashboard can show it. Trigger on /snapshot, take a snapshot, update my usage, refresh the usage meters, set up my usage meters, how much of my plan have I used, update my connections, fill the connections wall, update the hermes card, or is hermes running.
 ---
 
 # Snapshot - how much of your plan is used
@@ -20,6 +20,13 @@ versions, and which servers and plugins Claude Code and Codex have - **names onl
 each one connects. It saves that in a second file, `.agent-team/status/connections/<computer>.json`.
 The guide for students is `docs/guides/connections-wall.md` in the team repo, and the technical
 side is `docs/guides/connections-wall-how-it-works.md`.
+
+If this computer has **Hermes**, the script fills the **Hermes card** at the top of Connections
+too: Hermes's version, whether its gateway and scheduler were beating, and for each profile the
+model, how many skills, and how many conversations and scheduled runs in the last 7 days -
+**counts, times and names only**, read from Hermes's own files. It saves that in a third file,
+`.agent-team/status/hermes/<computer>.json`. When Hermes is alive at that moment, it also writes
+Hermes's heartbeat, `runs/heartbeat/hermes.json`. Both guides above have a section on the card.
 
 The step-by-step student guide is `docs/guides/usage-meters.md` in the team repo, and how it all
 works is `docs/guides/usage-meters-how-it-works.md`. Point people there.
@@ -75,9 +82,19 @@ never open, read or print any of them - not to check a name, not to "help":
 - any plugin's `.mcp.json` or `plugin.json`
 - `~/.codex/auth.json` - the Codex sign-in
 - `~/.codex/config.toml` - Codex's servers, with their commands and settings
-- Hermes's files (`~/.hermes`, or `%LOCALAPPDATA%\hermes` on Windows) - its keys, memory and chats
+- Hermes's files - everything in `~/.hermes`, or `%LOCALAPPDATA%\hermes` on Windows (or wherever
+  `HERMES_HOME` points), including every profile in its `profiles/` folder:
+  - `.env` and `auth.json` - its keys and sign-ins
+  - `SOUL.md`, `USER.md` and `memories` - who it is, who you are, what it remembers
+  - `logs` and the `sessions` folder - what it did and what was said
+  - `state.db` - every session, with titles, folders and chat ids. The script asks it one
+    read-only question for counts; you never open or query it
+  - `config.yaml` - its settings, including model addresses that can carry a key
+  - `gateway_state.json` - the gateway's command line, with folder paths in it
+  - `cron/ticker_heartbeat`, `.update_check` and the `skills` folder
 
-If someone asks what is in them, say the wall shows the names, and point them to the guide.
+If someone asks what is in them, say the wall and the Hermes card show the names and counts, and
+point them to the guide.
 
 ## Rules - read these first
 
@@ -89,6 +106,9 @@ If someone asks what is in them, say the wall shows the names, and point them to
   name and whether it connects.
 - **Never run `hermes`**, not even `hermes --version`. It is not read-only: run once to read its
   version, it tried to update itself. The script reads Hermes's version from its files instead.
+- **Never open or query Hermes's `state.db`** - not with `sqlite3`, not with a script, not "just
+  to count". It holds every session's title, folder and chat. The script asks it one fixed,
+  read-only question and keeps only the counts.
 - **Never edit `~/.claude/settings.json` yourself.** Installing the tap changes it, so the
   installer does that: it changes one key, backs the file up first, and can undo itself. Only run
   it after the person says yes.
@@ -96,8 +116,8 @@ If someone asks what is in them, say the wall shows the names, and point them to
   in it looks like a secret. If that happens, tell the person which field it named, and stop.
   Never work around it: do not edit the file by hand, do not skip the check, do not run
   the pieces separately to get the file written anyway.
-- **Commit only its own paths.** `--commit` saves just the usage file and the connections file,
-  in one commit. Anything else the person
+- **Commit only its own paths.** `--commit` saves just the usage file, the connections file, the
+  Hermes file, and Hermes's heartbeat when it wrote one, in one commit. Anything else the person
   has changed in the repo stays untouched.
 - **It pushes only when that push would carry the snapshot alone.** Otherwise the script
   commits the snapshot but does not push, and says why. That happens when:
@@ -133,9 +153,11 @@ node scripts/collect-status.mjs --computer "<label>" --commit
 
 Add `--dry-run` first if they want to see what it would save without saving anything.
 
-It fills both the usage meters and the Connections wall. The connections part asks every server
-whether it works, so it can take up to 2 minutes - tell them that before it starts. For the wall
-only, add `--only connections`; for the meters only, `--only usage`.
+It fills the usage meters, the Connections wall and the Hermes card. The connections part asks
+every server whether it works, so it can take up to 2 minutes - tell them that before it starts.
+For the wall only, add `--only connections`; for the meters only, `--only usage`; for the Hermes
+card only, `--only hermes` (quick: it runs no program at all). Parts can be combined, such as
+`--only usage,connections`.
 
 ### 3. Read it back in plain words
 
@@ -178,6 +200,29 @@ files it read) and say, in plain words:
 
 Never say or mark anything as **Proved**. Proved comes only from their connections register, after
 they have tested a connection by hand. Found is not proved. The live check can take up to 2 minutes.
+
+### Reading back the Hermes card
+
+Open `.agent-team/status/hermes/<computer-slug>.json` (the file the script wrote - never Hermes's
+own files) and say, in plain words:
+
+- **Running or not.** The file does not say; the dashboard works it out, and so does the script's
+  printed summary: `Alive by the rule: yes` means the card shows **Running** (the gateway said
+  `running`, or a profile's scheduler beat, within 5 minutes of the check), and a heartbeat was
+  written. `no` means the card shows **Down at last check**. A reading older than 8 hours shows
+  **Not checked for** that many hours. Never say or guess that Hermes is running from anything else.
+- **Version**: the number, and "update available" or "up to date" only when the file says so
+  (`updateAvailable`). No `updateAvailable` means Hermes has not checked lately - say "not known".
+- **Each profile**: the model ("x via provider"), how many skills, how many conversations and
+  scheduled runs in the last 7 days, and when it was last active. "Not available (needs a newer
+  Node)" means the sessions need Node.js 22.13 or newer - the rest of the card still works.
+  `hidden` counts profiles whose names looked like a secret or their username; say the number only.
+- **No Hermes here**: install, gateway and profiles all `not found`. Say "no Hermes on this
+  computer", not a failure.
+
+If they want the Hermes light on the Machines list, Hermes needs an entry in `runtimes.yml` with
+`heartbeat: runs/heartbeat/hermes.json` and `stale_after_minutes: 200`, because the script only
+checks every 3 hours. Offer to add it; show them the entry before you commit it.
 
 ### 4. Say what happens next
 

@@ -259,3 +259,51 @@ test('/snapshot reads the wall back in plain words, and never calls anything pro
   assert.match(section, /never (say|call|mark)[^.]*proved/i)
   assert.match(section, /2 minutes/)
 })
+
+// --- Phase 6: the Hermes card ----------------------------------------------------------------------
+//
+// The collector now writes a third file, the Hermes card, and Hermes's heartbeat when Hermes is
+// alive. It reads Hermes's own files for counts, times and names - next to files that hold Hermes's
+// keys, what it remembers, what it was told, and every chat. A model following this skill must not
+// go and look for itself, must not ask Hermes's database anything, and must not run Hermes.
+
+test('/snapshot fills the Hermes card too, and says what it is', () => {
+  assert.match(snapshot, /\.agent-team\/status\/hermes\//)
+  assert.match(snapshot, /--only hermes/)
+  assert.match(snapshot, /runs\/heartbeat\/hermes\.json/)
+  assert.match(snapshot, /^description: .*hermes/im)
+  assert.match(flatSnapshot, /counts, times and names only/i)
+})
+
+test('/snapshot lists every Hermes file it never opens', () => {
+  const start = snapshot.indexOf('## Files you never open')
+  const section = snapshot.slice(start, snapshot.indexOf('\n## ', start + 1))
+  for (const file of ['.env', 'auth.json', 'SOUL.md', 'USER.md', 'memories', 'logs', 'state.db', 'config.yaml', 'gateway_state.json', 'cron/ticker_heartbeat']) {
+    assert.ok(section.includes(file), `the list of files never opened leaves out Hermes's ${file}`)
+  }
+  assert.match(section, /~\/\.hermes/)
+  assert.ok(section.includes(String.raw`%LOCALAPPDATA%\hermes`), 'the list does not name the Windows Hermes folder')
+})
+
+test('/snapshot never asks Hermes\'s database anything, and never runs Hermes', () => {
+  assert.match(flatSnapshot, /never (open|query|ask)[^.]*state\.db/i)
+  assert.match(flatSnapshot, /sqlite3/)
+  assert.match(flatSnapshot, /never run `hermes`/i)
+})
+
+test('/snapshot reads the Hermes card back in plain words, and lets the board say whether it is running', () => {
+  const start = snapshot.indexOf('### Reading back the Hermes card')
+  assert.ok(start > 0, 'no section on reading the Hermes card back')
+  const section = snapshot.slice(start, snapshot.indexOf('\n### ', start + 1)).replace(/\s+/g, ' ')
+  for (const words of ['Running', 'Down at last check', 'Not checked for', 'needs a newer Node', 'update available', 'stale_after_minutes: 200']) {
+    assert.ok(section.includes(words), `the read-back leaves out ${words}`)
+  }
+  assert.match(section, /hidden/)
+  assert.match(section, /never (say|guess|add)[^.]*(running|alive)/i)
+})
+
+test('/snapshot commits the Hermes file and the heartbeat with the others, and only those', () => {
+  const rule = flatSnapshot.slice(flatSnapshot.indexOf('**Commit only its own paths.**'))
+  assert.match(rule.slice(0, 400), /hermes/i)
+  assert.match(rule.slice(0, 400), /heartbeat/i)
+})
