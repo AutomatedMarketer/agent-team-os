@@ -162,6 +162,23 @@ test('/snapshot names each source by what the file says, the tap as claude-code-
   assert.doesNotMatch(snapshot, /claude-code-saved` both for the tap/)
 })
 
+// The decided order (template): the tap wins only under 30 minutes old, then the live call, then
+// the tap up to 6 hours, then Claude Code's saved file. The tap carries only the 5-hour and weekly
+// windows, so a per-model weekly meter needs a backup source.
+test('/snapshot gives the decided source order, and what the tap does not carry', () => {
+  const section = snapshot.slice(snapshot.indexOf('## Where the Claude numbers come from'), snapshot.indexOf('## Rules'))
+  const steps = section.split('\n').filter((line) => /^\d\. /.test(line))
+  assert.equal(steps.length, 4)
+  assert.match(steps[0], /status line tap/i)
+  assert.match(section.replace(/\s+/g, ' '), /under 30 minutes old/)
+  assert.match(steps[1], /live call/i)
+  assert.match(steps[2], /tap.*again/i)
+  assert.match(section.replace(/\s+/g, ' '), /up to 6 hours old/)
+  assert.match(steps[3], /saved/i)
+  assert.match(section.replace(/\s+/g, ' '), /only the 5-hour and weekly/i)
+  assert.match(section.replace(/\s+/g, ' '), /per-model weekly/i)
+})
+
 // SECURITY (template review): the status line runs after every reply with no prompt, so the
 // installer copies the tap out of the team repo and the status line runs the copy. A pull does
 // not change it; running the installer again - after reading the change - is the update. The

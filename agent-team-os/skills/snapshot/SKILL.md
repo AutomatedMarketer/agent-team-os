@@ -24,10 +24,14 @@ The script tries these in order and uses the first that works:
 
 1. **The status line tap - the official numbers, and the first choice.** Claude Code hands the bar
    at the bottom of its screen (the status line) the 5-hour and weekly percentages. A small script,
-   the status line tap, keeps them on this computer. They are fresh only if Claude Code was used
-   here in the last 6 hours, on Pro or Max.
+   the status line tap, keeps them on this computer. Used first if the reading is under 30 minutes
+   old - that is, Claude Code was used here in the last half hour, on Pro or Max.
 2. **The live call** - unofficial. Uses the person's Claude sign-in, without ever showing it.
-3. **Claude Code's own saved reading** - unofficial.
+3. **The status line tap again**, if the live call failed and the tap's reading is up to 6 hours old.
+4. **Claude Code's own saved reading** - unofficial.
+
+The tap carries only the 5-hour and weekly limits. A per-model weekly limit ("Weekly, Fable only")
+comes only from the live call or the saved reading.
 
 The tap only works once it is installed. If `.agent-team/onboarding-state.md` does not say
 `usage-tap: installed` - or the person says "set up my usage meters" - offer it. Explain it in one
@@ -116,9 +120,11 @@ If a reading says unavailable, say that. Do not fill in a number.
 official numbers, which the dashboard shows as "from Claude Code’s status line". `unofficial-live`
 is the live call and `claude-code-saved` is Claude Code's own saved file; both are backups, labelled
 unofficial. Under the Claude limits line, the script's printed summary also lists every source it
-tried, in order: `- status line: found` means the tap's reading was used. If the status line line
-says `not found`, the tap is not installed - offer it as above. If it says `unavailable`, read them the reason; usually Claude Code has not been used
-on this computer for over 6 hours.
+tried, in order. `- status line: found (over 30 minutes old, so the live call went first)` means
+the tap had a reading but the live call was tried first; the file's source says which one won. If
+the status line line says `not found`, the tap is not installed - offer it as above. If it says
+`unavailable`, read them the reason; usually Claude Code has not been used on this computer for
+over 6 hours.
 
 ### 4. Say what happens next
 
