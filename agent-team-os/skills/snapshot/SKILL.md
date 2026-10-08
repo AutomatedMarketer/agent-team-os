@@ -87,8 +87,8 @@ never open, read or print any of them - not to check a name, not to "help":
   - `.env` and `auth.json` - its keys and sign-ins
   - `SOUL.md`, `USER.md` and `memories` - who it is, who you are, what it remembers
   - `logs` and the `sessions` folder - what it did and what was said
-  - `state.db` - every session, with titles, folders and chat ids. The script asks it one
-    read-only question for counts; you never open or query it
+  - `state.db` - every session, with titles, folders and chat ids. The script copies it to a
+    private folder, counts from the copy and deletes the copy; you never open or query it
   - `config.yaml` - its settings, including model addresses that can carry a key
   - `gateway_state.json` - the gateway's command line, with folder paths in it
   - `cron/ticker_heartbeat`, `.update_check` and the `skills` folder
@@ -107,8 +107,9 @@ point them to the guide.
 - **Never run `hermes`**, not even `hermes --version`. It is not read-only: run once to read its
   version, it tried to update itself. The script reads Hermes's version from its files instead.
 - **Never open or query Hermes's `state.db`** - not with `sqlite3`, not with a script, not "just
-  to count". It holds every session's title, folder and chat. The script asks it one fixed,
-  read-only question and keeps only the counts.
+  to count". It holds every session's title, folder and chat, and opening it at all - even
+  read-only - makes SQLite leave new files in Hermes's folder. The script copies it to a private
+  folder, asks the copy one fixed question, keeps only the counts and deletes the copy.
 - **Never edit `~/.claude/settings.json` yourself.** Installing the tap changes it, so the
   installer does that: it changes one key, backs the file up first, and can undo itself. Only run
   it after the person says yes.

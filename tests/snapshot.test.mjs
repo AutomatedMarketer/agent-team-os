@@ -307,3 +307,14 @@ test('/snapshot commits the Hermes file and the heartbeat with the others, and o
   assert.match(rule.slice(0, 400), /hermes/i)
   assert.match(rule.slice(0, 400), /heartbeat/i)
 })
+
+// SECURITY (Phase 6 review): opening Hermes's state.db, even read-only, makes SQLite leave -wal and
+// -shm files in Hermes's folder. The collector now asks a private copy, and the skill must say that
+// rather than the old "one read-only question" - a model that believes read-only is harmless would
+// feel free to open the file itself.
+test('/snapshot says the session count comes from a private copy of state.db, deleted after', () => {
+  assert.doesNotMatch(flatSnapshot, /read-only question/i)
+  assert.match(flatSnapshot, /copies (it|`state\.db`) (in)?to a private folder/i)
+  assert.match(flatSnapshot, /deletes the copy/i)
+  assert.match(flatSnapshot, /even read-only/i)
+})
