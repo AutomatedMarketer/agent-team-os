@@ -155,9 +155,15 @@ ask yes or no:
   ```
 
   Read back what it printed in plain words: where the backup of their settings went, and that
-  `node scripts/install-usage-tap.mjs --remove` undoes it exactly. The numbers start after
-  Claude's next reply. Never edit `~/.claude/settings.json` yourself - the script changes one key
-  and backs the file up first. If it says "Nothing changed", read them its reason and move on.
+  `node scripts/install-usage-tap.mjs --remove` undoes it exactly and deletes the copy of the tap.
+  The numbers start after Claude's next reply. Never edit `~/.claude/settings.json` yourself - the
+  script changes one key and backs the file up first. If it says "Nothing changed", read them its
+  reason and move on.
+
+  Tell them in one breath why it made a **copy of the tap**: the status line runs after every
+  reply with no prompt, so it runs a copy kept in their own folder, not the team repo. A pull does
+  not change that copy. To take a newer tap, they run the installer again, after reading what
+  changed.
 - **On the always-on Mac**, run the same command from the collector's **code checkout**
   (`~/.local/share/agent-status/collector-code`), never from the **data clone** - the data clone is
   reset to the team repo on every run, so code in it is not code they have read.

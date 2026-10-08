@@ -161,3 +161,18 @@ test('/snapshot names each source by what the file says, the tap as claude-code-
   assert.match(snapshot, /status line: found/)
   assert.doesNotMatch(snapshot, /claude-code-saved` both for the tap/)
 })
+
+// SECURITY (template review): the status line runs after every reply with no prompt, so the
+// installer copies the tap out of the team repo and the status line runs the copy. A pull does
+// not change it; running the installer again - after reading the change - is the update. The
+// skill and the onboarding step must tell the person that, and that --remove deletes the copy.
+test('/snapshot and phase 11 say the tap runs from a copy that a pull does not change', () => {
+  for (const [name, text] of [['/snapshot', snapshot], ['phase 11', phase]]) {
+    const doc = text.replace(/\s+/g, ' ')
+    assert.match(doc, /copy of the tap/i, `${name} does not say the status line runs a copy`)
+    assert.match(doc, /pull does not change/i, `${name} does not say a pull leaves the copy alone`)
+    assert.match(doc, /run(ning)? the installer again/i, `${name} does not say how to update`)
+    assert.match(doc, /read(ing)? (what changed|the change)/i, `${name} does not say to read the change first`)
+    assert.match(doc, /--remove`?[^.]*deletes? the copy/i, `${name} does not say --remove deletes the copy`)
+  }
+})

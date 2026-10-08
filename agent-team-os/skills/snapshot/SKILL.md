@@ -44,8 +44,13 @@ node scripts/install-usage-tap.mjs
 ```
 
 Read back where it put the backup of their settings, and that
-`node scripts/install-usage-tap.mjs --remove` puts back exactly what they had. The tap's numbers
-start after Claude's next reply, so a snapshot taken straight away still uses the backup method.
+`node scripts/install-usage-tap.mjs --remove` puts back exactly what they had and deletes the copy
+of the tap. The tap's numbers start after Claude's next reply, so a snapshot taken straight away
+still uses the backup method.
+
+The status line runs a **copy of the tap**, not the team repo: it runs after every reply with no
+permission prompt, so code there must not be whatever was last pushed. A pull does not change the
+copy. To take a newer tap, they run the installer again - after reading what changed in it.
 
 ## Rules - read these first
 
