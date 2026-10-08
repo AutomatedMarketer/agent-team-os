@@ -20,7 +20,9 @@ You are the guide, not the operator. Every step here happens in **their** browse
 **their** accounts — GitHub, Vercel, their phone. You tell them exactly where to click and
 what to type; you do not run deploy commands, and nothing from steps 1 to 7 gets written
 into a file in the repo. The dashboard's settings live in Vercel's own settings screen and
-nowhere else. The one exception is step 9, where their subscription prices go into `stack.yml`.
+nowhere else. The one exception is step 10, where their subscription prices go into `stack.yml`.
+Step 9's installer, run only on a yes, changes their Claude Code settings on this computer, not
+the repo.
 
 ## Steps
 
@@ -117,7 +119,7 @@ give it a beat before closing out.
 
 ### 8. Which computer is always on?
 
-Ask this on its own, then wait. Questions 8 and 9 are asked one at a time, never together.
+Ask this on its own, then wait. Questions 8, 9 and 10 are asked one at a time, never together.
 
 > "The dashboard can show how much of your Claude and Codex plan limits you have used, and
 > when they reset. A small script on one of your computers reads those numbers and saves them
@@ -134,9 +136,40 @@ Do not ask which Claude plan they are on. Phase 1 already has it. Write down whi
 chose in `.agent-team/onboarding-state.md` as `usage-snapshots: mac-schedule` or
 `usage-snapshots: by-hand`.
 
-### 9. What do they pay each month?
+### 9. Offer the usage tap
 
-Only after step 8 is answered:
+Only after step 8 is answered. This gives the dashboard the **official** Claude numbers: Claude
+Code hands its status line the 5-hour and weekly percentages, and a small script keeps them for the
+snapshot. Without it, the snapshot falls back to an unofficial method. Say it in one sentence and
+ask yes or no:
+
+> "Can I add a small script to the bar at the bottom of Claude Code, so it saves your official
+> usage numbers for the dashboard? Your current status line keeps showing - yes or no?"
+
+- **On a yes**, and only if they say yes: from the **team repo root**, show the change first, then
+  install:
+
+  ```bash
+  node scripts/install-usage-tap.mjs --dry-run
+  node scripts/install-usage-tap.mjs
+  ```
+
+  Read back what it printed in plain words: where the backup of their settings went, and that
+  `node scripts/install-usage-tap.mjs --remove` undoes it exactly. The numbers start after
+  Claude's next reply. Never edit `~/.claude/settings.json` yourself - the script changes one key
+  and backs the file up first. If it says "Nothing changed", read them its reason and move on.
+- **On the always-on Mac**, run the same command from the collector's **code checkout**
+  (`~/.local/share/agent-status/collector-code`), never from the **data clone** - the data clone is
+  reset to the team repo on every run, so code in it is not code they have read.
+- **On a no**, that is fine. The snapshot still works with the backup method.
+
+Write down the answer in `.agent-team/onboarding-state.md` as `usage-tap: installed` or
+`usage-tap: declined`. The student guide for all of this is `docs/guides/usage-meters.md` in
+their team repo - point them to it.
+
+### 10. What do they pay each month?
+
+Only after step 9 is answered:
 
 > "Last question for this screen. What do you pay each month for your AI subscriptions?
 > Claude, ChatGPT, anything like that. Tell me the name, the price, and whether it is monthly
@@ -170,7 +203,8 @@ Prices are the person's own words, so write them as given. Never look a price up
 - The icon is on their phone's home screen
 - They confirm, in their own words: they dispatched a job from the phone and watched it
   run to a result
-- Step 8 is answered and recorded in `.agent-team/onboarding-state.md`, and step 9 is answered or declined
+- Step 8 is answered and recorded in `.agent-team/onboarding-state.md`, step 9 is recorded there as
+  `usage-tap: installed` or `usage-tap: declined`, and step 10 is answered or declined
 - No token, key, or trigger URL appears in any file in the repo or in this conversation
 
 ## Close out

@@ -1,6 +1,6 @@
 ---
 name: snapshot
-description: Takes a reading of your AI plan usage (how much of each limit is used and when it resets) and saves it into your team repo so the dashboard can show it. Trigger on /snapshot, take a snapshot, update my usage, refresh the usage meters, or how much of my plan have I used.
+description: Takes a reading of your AI plan usage (how much of each limit is used and when it resets) and saves it into your team repo so the dashboard can show it. Trigger on /snapshot, take a snapshot, update my usage, refresh the usage meters, set up my usage meters, or how much of my plan have I used.
 ---
 
 # Snapshot - how much of your plan is used
@@ -15,11 +15,46 @@ everyone else, and for a quick refresh any time.
 
 It saves percentages and times only. No logins, no tokens, no message text.
 
+The step-by-step student guide is `docs/guides/usage-meters.md` in the team repo, and how it all
+works is `docs/guides/usage-meters-how-it-works.md`. Point people there.
+
+## Where the Claude numbers come from
+
+The script tries these in order and uses the first that works:
+
+1. **The status line tap - the official numbers, and the first choice.** Claude Code hands the bar
+   at the bottom of its screen (the status line) the 5-hour and weekly percentages. A small script,
+   the status line tap, keeps them on this computer. They are fresh only if Claude Code was used
+   here in the last 6 hours, on Pro or Max.
+2. **The live call** - unofficial. Uses the person's Claude sign-in, without ever showing it.
+3. **Claude Code's own saved reading** - unofficial.
+
+The tap only works once it is installed. If `.agent-team/onboarding-state.md` does not say
+`usage-tap: installed` - or the person says "set up my usage meters" - offer it. Explain it in one
+sentence and ask yes or no:
+
+> "Can I add a small script to the bar at the bottom of Claude Code, so it saves your official
+> usage numbers for the dashboard? Your current status line keeps showing - yes or no?"
+
+Only on a yes, from the team repo root:
+
+```bash
+node scripts/install-usage-tap.mjs --dry-run
+node scripts/install-usage-tap.mjs
+```
+
+Read back where it put the backup of their settings, and that
+`node scripts/install-usage-tap.mjs --remove` puts back exactly what they had. The tap's numbers
+start after Claude's next reply, so a snapshot taken straight away still uses the backup method.
+
 ## Rules - read these first
 
 - **Never open, read or print the credentials files.** That means `~/.claude/.credentials.json`,
   `~/.claude.json`, `~/.codex/auth.json`, and the Keychain (the Mac's password store). The
   script handles them privately and prints nothing secret. You have no reason to look, so do not.
+- **Never edit `~/.claude/settings.json` yourself.** Installing the tap changes it, so the
+  installer does that: it changes one key, backs the file up first, and can undo itself. Only run
+  it after the person says yes.
 - **If the script refuses, stop.** It has a safety check that refuses to save a file if anything
   in it looks like a secret. If that happens, tell the person which field it named, and stop.
   Never work around it: do not edit the file by hand, do not skip the check, do not run
@@ -71,6 +106,13 @@ Open the file it wrote, `.agent-team/status/usage/<computer-slug>.json`, and tel
   not as a failure.
 
 If a reading says unavailable, say that. Do not fill in a number.
+
+**Which source it was.** The file says `claude-code-saved` both for the tap's official reading and
+for Claude Code's own saved one. The script's printed summary tells them apart: under the Claude
+limits line it lists every source it tried, in order. `- status line: found` means the official
+numbers from the tap. If the status line line says `not found`, the tap is not installed - offer
+it as above. If it says `unavailable`, read them the reason; usually Claude Code has not been used
+on this computer for over 6 hours.
 
 ### 4. Say what happens next
 

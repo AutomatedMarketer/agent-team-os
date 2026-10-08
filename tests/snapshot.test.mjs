@@ -99,3 +99,60 @@ test('/snapshot passes on "fetch or pull, then take the snapshot again" instead 
   assert.match(snapshot, /different repo/i)
   assert.doesNotMatch(snapshot, /tell them to pull, then push/i)
 })
+
+// The status line tap gives the OFFICIAL Claude reading: Claude Code hands its status line the
+// 5-hour and weekly percentages, and the tap keeps them for the collector. It only works once it is
+// installed, and installing it edits the person's own Claude Code settings - so phase 11 offers it
+// with a plain yes or no, right after the always-on question, and never installs it unasked.
+test('phase 11 offers the usage tap after the always-on question, as its own yes-or-no', () => {
+  const always = phase.indexOf('### 8. Which computer is always on?')
+  const tap = phase.indexOf('### 9. Offer the usage tap')
+  const pay = phase.indexOf('### 10. What do they pay each month?')
+  assert.ok(always >= 0 && tap > always && pay > tap, 'the steps are not always-on, then the tap, then prices')
+  const offer = phase.slice(tap, pay)
+  assert.match(offer, /node scripts\/install-usage-tap\.mjs/)
+  assert.match(offer, /team repo root/i)
+  assert.match(offer, /\byes or no\b/i)
+  assert.match(offer, /only (on|after) (a )?yes|on a yes|if they say yes/i)
+  assert.match(offer, /--dry-run/)
+  assert.match(offer, /--remove/)
+  assert.match(offer, /usage-tap: (installed|declined)/)
+  assert.match(offer, /docs\/guides\/usage-meters\.md/)
+  // The one sentence a person hears before deciding: what it is, in plain words.
+  // Continuation lines of the quote are joined; the opening `> "` is kept.
+  const said = /> "([^"]+)"/.exec(offer.replace(/\r?\n> (?!")/g, ' '))?.[1] ?? ''
+  assert.match(said, /status line|bottom of Claude Code/i)
+  assert.ok(said.split(/(?<=[.?!])\s+/).length <= 3, 'the offer is more than a sentence and a question')
+  // On the always-on Mac it runs from the pinned code checkout, never the data clone.
+  assert.match(offer, /code checkout/i)
+  assert.match(offer, /data clone/i)
+  assert.match(phase, /Questions 8, 9 and 10 are asked one at a time/)
+})
+
+test('phase 11 records the tap answer before closing out', () => {
+  const check = phase.slice(phase.indexOf('## Check'), phase.indexOf('## Close out'))
+  assert.match(check, /usage-tap/)
+})
+
+test('/snapshot names the status line tap as the first source, and points to the guide', () => {
+  assert.match(snapshot, /status line tap/i)
+  assert.match(snapshot, /first/i)
+  assert.match(snapshot, /official/i)
+  assert.match(snapshot, /docs\/guides\/usage-meters\.md/)
+  assert.match(snapshot, /node scripts\/install-usage-tap\.mjs/)
+  assert.match(snapshot, /--remove/)
+  // "Set up my usage meters" is what the student guide tells people to say.
+  assert.match(snapshot, /^description: .*set up my usage meters/m)
+})
+
+test('/snapshot lets the installer edit settings.json, and never edits it by hand', () => {
+  assert.match(snapshot, /settings\.json/)
+  assert.match(snapshot, /never edit `~\/\.claude\/settings\.json` yourself/i)
+  assert.match(snapshot, /yes or no/i)
+  assert.match(snapshot, /only on a yes|only run\s+it after the person says yes/i)
+})
+
+test('/snapshot explains which saved reading it was, from the summary lines', () => {
+  assert.match(snapshot, /status line: found/)
+  assert.match(snapshot, /claude-code-saved/)
+})
