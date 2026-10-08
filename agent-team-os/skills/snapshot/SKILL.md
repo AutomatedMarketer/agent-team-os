@@ -107,11 +107,12 @@ Open the file it wrote, `.agent-team/status/usage/<computer-slug>.json`, and tel
 
 If a reading says unavailable, say that. Do not fill in a number.
 
-**Which source it was.** The file says `claude-code-saved` both for the tap's official reading and
-for Claude Code's own saved one. The script's printed summary tells them apart: under the Claude
-limits line it lists every source it tried, in order. `- status line: found` means the official
-numbers from the tap. If the status line line says `not found`, the tap is not installed - offer
-it as above. If it says `unavailable`, read them the reason; usually Claude Code has not been used
+**Which source it was.** The file names it. `claude-code-statusline` is the tap's reading - the
+official numbers, which the dashboard shows as "from Claude Code’s status line". `unofficial-live`
+is the live call and `claude-code-saved` is Claude Code's own saved file; both are backups, labelled
+unofficial. Under the Claude limits line, the script's printed summary also lists every source it
+tried, in order: `- status line: found` means the tap's reading was used. If the status line line
+says `not found`, the tap is not installed - offer it as above. If it says `unavailable`, read them the reason; usually Claude Code has not been used
 on this computer for over 6 hours.
 
 ### 4. Say what happens next

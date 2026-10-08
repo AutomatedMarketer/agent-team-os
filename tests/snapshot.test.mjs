@@ -152,7 +152,12 @@ test('/snapshot lets the installer edit settings.json, and never edits it by han
   assert.match(snapshot, /only on a yes|only run\s+it after the person says yes/i)
 })
 
-test('/snapshot explains which saved reading it was, from the summary lines', () => {
+// The contract gave the tap its own source name, claude-code-statusline, which the board shows as
+// official. The skill must say so, and must not tell anyone the tap is filed as a saved copy.
+test('/snapshot names each source by what the file says, the tap as claude-code-statusline', () => {
+  assert.match(snapshot, /`claude-code-statusline`[^.]*official/)
+  assert.match(snapshot, /`claude-code-saved`/)
+  assert.match(snapshot, /`unofficial-live`/)
   assert.match(snapshot, /status line: found/)
-  assert.match(snapshot, /claude-code-saved/)
+  assert.doesNotMatch(snapshot, /claude-code-saved` both for the tap/)
 })
