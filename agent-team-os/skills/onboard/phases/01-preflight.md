@@ -47,5 +47,9 @@ the email agent.
 
 All four answered. Write the results into the state file's notes section, one line each.
 
+One heads-up, no action now: phase 11 asks where they want their board, on their own
+computer or as a website they can open from their phone. If they will want it on their
+computer, Node 20 or newer and git are needed; phase 2 already proves both.
+
 Then say what happens next in one sentence: "Phase 2 creates your repo. Twenty minutes.
 Continue or pause?"

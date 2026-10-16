@@ -39,7 +39,7 @@ check makes concrete.
 | 2 · Access | 6 | "What's on my calendar tomorrow?" returns live data |
 | 3 · Training | 7–9 | A short phrase produces a real artifact, on a schedule |
 | 4 · Workflows | 10 | Laptop closed, something happens |
-| 5 · Oversight | 11 | A job dispatched from their phone, watched to the end |
+| 5 · Oversight | 11 | A task ordered by voice from their own board lands in their repo as a commit nobody typed |
 | 6 · Improvement | 12 | Their own words are the standard, and one verdict has already changed a file |
 
 | # | Phase | File | What happens | Time |
@@ -54,7 +54,7 @@ check makes concrete.
 | 8 | First routine | `phases/08-first-routine.md` | Schedule Research, Run now to prove it | 20 min |
 | 9 | Verify | `phases/09-verify.md` | Run `/audit`, read the self-check | 15 min |
 | 10 | Workflows | `phases/10-workflows.md` | Chain skills into named jobs, schedule them, pick the board | 40 min |
-| 11 | Oversight | `phases/11-oversight.md` | Deploy the dashboard, wire the buttons, phone bookmark | 30 min |
+| 11 | Oversight | `phases/11-oversight.md` | Ask where the board should live (on their computer, or a website), set it up their way, order one task by voice | 25-90 min |
 | 12 | The standard | `phases/12-the-standard.md` | Their `done` block in their own words, one verdict captured, the two weekly jobs on | 25 min |
 
 About four and a half hours of work, deliberately split so that nobody has to do it in one
@@ -112,9 +112,9 @@ not pass its check does not advance.
 ## Secrets
 
 Never ask for an API key, a token, or a password. Nothing in this install passes one
-through this chat: the two that exist at all (the read-only GitHub token and the fire key
-in phase 11) are minted by the user and typed straight into Vercel's settings form, never
-shown to you. Connectors are authorised by signing in, in the browser, on the user's own
+through this chat: the keys phase 11 needs (the read-only GitHub token, the board password, the
+fire key and routine links, and the OpenAI key) are made by the user and typed straight into
+Vercel's settings form or the board's own Settings box, never shown to you. Connectors are authorised by signing in, in the browser, on the user's own
 account.
 
 If a user pastes a secret anyway: tell them to rotate it, do not repeat the value back, and

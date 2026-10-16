@@ -105,9 +105,9 @@ test('/snapshot passes on "fetch or pull, then take the snapshot again" instead 
 // installed, and installing it edits the person's own Claude Code settings - so phase 11 offers it
 // with a plain yes or no, right after the always-on question, and never installs it unasked.
 test('phase 11 offers the usage tap after the always-on question, as its own yes-or-no', () => {
-  const always = phase.indexOf('### 8. Which computer is always on?')
-  const tap = phase.indexOf('### 9. Offer the usage tap')
-  const pay = phase.indexOf('### 10. What do they pay each month?')
+  const always = phase.indexOf('### U1. Which computer is always on?')
+  const tap = phase.indexOf('### U2. Offer the usage tap')
+  const pay = phase.indexOf('### U3. What do they pay each month?')
   assert.ok(always >= 0 && tap > always && pay > tap, 'the steps are not always-on, then the tap, then prices')
   const offer = phase.slice(tap, pay)
   assert.match(offer, /node scripts\/install-usage-tap\.mjs/)
@@ -126,7 +126,7 @@ test('phase 11 offers the usage tap after the always-on question, as its own yes
   // On the always-on Mac it runs from the pinned code checkout, never the data clone.
   assert.match(offer, /code checkout/i)
   assert.match(offer, /data clone/i)
-  assert.match(phase, /Questions 8, 9 and 10 are asked one at a time/)
+  assert.match(phase, /Questions U1, U2 and U3 are asked one at a time/)
 })
 
 test('phase 11 records the tap answer before closing out', () => {
