@@ -231,8 +231,9 @@ If there is no **Fork** button or the page says not found: ask them to confirm t
 signed in to GitHub, and to read you what the page shows. Do not invent another way to copy
 it.
 
-**Builder note:** confirm that `automatedmarketer/agent-cockpit` is public before students
-use this. A private repo cannot be forked by them, and this step would fail for everyone.
+Checked on GitHub's API on 2026-10-16: `AutomatedMarketer/agent-cockpit` is public and
+allows forking, and `AutomatedMarketer/agent-team-template` is public. Re-check both if a
+student reports a missing Fork button.
 
 ### B2. Put it on Vercel
 
