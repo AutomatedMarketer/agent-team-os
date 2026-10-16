@@ -71,10 +71,16 @@ Write their choice in `.agent-team/onboarding-state.md` as `board: this-computer
 
 ## Path A — On my computer
 
-**Only when the switch above says `ready`.** The steps below are the plan for that board;
-they are not yet tried on a real machine.
+**Only when the switch above says `ready`.** The steps below are the plan for that board.
+They are not yet tried on a real Windows PC or Mac. Steps marked **NOT BUILT YET** need
+parts of the board that do not exist; the switch stays `coming-soon` until every one of them
+does.
 
-The student does eight things. Claude does the rest.
+The board is a folder on their computer with a starter file in it (`Start Board.command` on
+a Mac, `Start Board.bat` on Windows). It reads their team folder, which must be a copy of
+their team repo with a GitHub address it has been pushed to. In this document, **the board
+folder** is that folder. (Only the board's state folder, where its settings are kept, is
+called `Agent Board`.)
 
 ### A1. Check the computer (Claude does this, and says what is missing)
 
@@ -83,68 +89,84 @@ it before going on.
 
 | Check | How | If it fails |
 |---|---|---|
-| Node 20 or newer | `node --version` | Send them to nodejs.org to install the current LTS version, then reopen the terminal |
-| git | `git --version` | Send them to git-scm.com to install it |
-| Claude Code is current | `claude --version` | Run `claude update`. The installer checks the exact minimum |
-| No `ANTHROPIC_API_KEY` set | Mac: `[ -n "$ANTHROPIC_API_KEY" ] && echo set \|\| echo not set`. Windows PowerShell: `if ($env:ANTHROPIC_API_KEY) {'set'} else {'not set'}` | The board's runner refuses to start with one, because it would bill per use instead of using their plan. Never print the value. Ask them to remove it from their system settings, then reopen the terminal |
-| Team folder can push to GitHub | In the team folder: `git push --dry-run` | Fix the remote with them before going on |
+| Node 20 or newer | `node --version` | Missing or older than 20: send them to nodejs.org to install the current LTS version, then reopen the terminal |
+| git is installed | `git --version` | Send them to git-scm.com to install it |
+| The team folder points at GitHub | In the team folder: `git remote -v` | It must show a `github.com` address for their team repo. If not, fix the remote with them |
+| The team repo has been pushed once, and this computer can push | In the team folder: `git push --dry-run` | Without a pushed GitHub origin the board's jobs are off: it can look but not act. Fix the sign-in with them before going on |
 
 ### A2. They say yes to the install
 
-> "Next I put the board on this computer. I will download it into a folder called
-> **Agent Board**, set it up, and test it once. Claude Code will ask you to approve a few
+> "Next I put the board on this computer, in its own folder. It uses your team folder, so
+> everything it does lands in your own repo. Claude Code will ask you to approve a few
 > things as I go; that is normal. Say yes when you are ready."
 
-On a yes, run the board's installer. It downloads the board into an `Agent Board` folder,
-makes a private copy of their team repo for the runner, creates the settings file and the
-secrets it needs with random values (the student never sees or types these), runs a safety
-self-test, and collects their usage numbers once. Report the self-test result in one
-sentence.
+On a yes, download the board into a new folder next to their team folder with `git clone`
+(never a zip download: a zip carries a "came from the internet" mark that triggers extra
+warnings). Report in one sentence what was downloaded and where.
 
-**Builder note:** the installer does not exist yet. Its exact command and download address
-are filled in here when the board ships. Until then, do not guess one.
+**Builder note:** the exact clone address and any installer command are filled in here when
+the board ships. Until then, do not guess one.
 
-### A3. They make an OpenAI project with a monthly limit
+### A3. Claude tells the board where the team folder is
+
+Write a file called `board.json` next to `Start Board`, holding the full path of the team
+folder. Skip this only if the board folder sits inside the team folder.
+
+```text
+{"teamFolder": "FULL-PATH-TO-THEIR-TEAM-FOLDER"}
+```
+
+Use the real full path on this computer, such as `C:\Users\jane\my-agent-team` on Windows.
+Read the file back and confirm the path exists. Success looks like: you can list the team
+folder's contents from that path.
+
+### A4. They start the board
+
+> "Open the board folder. On a Mac, double-click **Start Board.command**. On Windows,
+> double-click **Start Board.bat**. A window opens, and then your browser opens with your
+> board. Keep that window open while you use the board."
+
+Success looks like: a browser tab opens with the board and their team's name on the Today
+screen.
+
+- The browser opens with a one-time link that works for **2 minutes**. If they missed the
+  tab or it says the link ran out, they double-click **Start Board** again for a fresh one.
+- Closing the program window stops the board. That is on purpose.
+- You may see a warning on a first start. This is **untested on real machines**, so say it
+  calmly: "A warning here is expected; this file came from your own download." On Windows:
+  **More info**, then **Run anyway**. On a Mac: **System Settings**, **Privacy & Security**,
+  then **Open Anyway** for that one file. Never tell them to switch off a security setting,
+  and if what they see does not match this, ask them to read you the message.
+- A window flashes and closes: run the starter from a terminal so the message stays on
+  screen. Usually Node is missing or older than 20.
+
+### A5. They make an OpenAI project with a monthly limit — NOT BUILT YET
+
+Voice needs this, and the voice engine is not in the board yet. **Builder note:** do not run
+this step until the Settings key box and voice exist.
 
 Say why first: voice is billed by OpenAI, separately from their Claude or ChatGPT plan.
 
 > "Go to `platform.openai.com` and sign in. Make a new **project** and call it
-> `my-board`. Then open that project's **Settings**, then **Limits**, then **Spend**, and
-> press **Edit spend limit**. Type a monthly amount you are happy to lose, turn on
+> `my-board`. Open that project's **Settings**, then **Limits**, then **Spend**, and press
+> **Edit spend limit**. Type a monthly amount you are happy to lose, turn on
 > **hard-limit enforcement**, and press **Save**."
 
 Success looks like: the limits page shows their amount with the hard limit on. An alert
-alone only sends an email and stops nothing; it must be the hard limit.
+alone only sends an email and stops nothing.
 
-### A4. They make an API key in that project
+### A6. They make an API key and put it in the board's Settings box — NOT BUILT YET
 
-> "Still in that project, open **API keys** and press **Create new secret key**. Copy it
-> and leave the page open. Do not paste it here. You will paste it into the board in a
-> minute."
+**Builder note:** the board has no Settings box yet. Do not run this step until it exists.
 
-### A5. They start the board
+> "In that project, open **API keys** and press **Create new secret key**. Copy it. Do not
+> paste it here. In the board, open **Settings**, paste the key into the OpenAI box, and
+> press **Save**. It is stored on this computer only, and the board will never show it
+> again."
 
-> "Open the **Agent Board** folder. On a Mac, double-click **Start Board.command**. On
-> Windows, double-click **Start Board.bat**. Your browser opens with your board."
+### A7. They allow the microphone — NOT BUILT YET
 
-Success looks like: a browser tab opens with the board and their team's name on the Today
-screen. The program window stays open behind it while the board runs; closing that window
-stops the board.
-
-- Mac says the file cannot be opened, or Windows shows a blue warning: this should not
-  happen because the installer put the file there itself. Tell them to take a photo of the
-  message and tell you what it says. Do not teach them to switch off any security setting.
-- A window flashes and closes: open the folder's `Start Board` file again from a terminal
-  so the message stays on screen, and fix what it says (usually Node is missing).
-
-### A6. They put the key in the board's Settings box
-
-> "In the board, open **Settings**. Paste your key into the OpenAI box and press **Save**.
-> It is stored on this computer only, and the board will never show it again."
-
-Success looks like: the box shows the key as saved without displaying it.
-
-### A7. They allow the microphone
+**Builder note:** needs the voice button, which is not in this board yet.
 
 > "Tap the round button at the bottom right. Your browser asks to use the microphone.
 > Press **Allow**."
@@ -152,7 +174,9 @@ Success looks like: the box shows the key as saved without displaying it.
 If they pressed Block by mistake: the icon left of the address bar lets them change it,
 then tap the button again.
 
-### A8. They ask it a question, then give it an order
+### A8. They ask it a question, then give it an order — NOT BUILT YET
+
+**Builder note:** needs voice and ordering tasks, neither built yet.
 
 > "Say: **What's due today?** You should hear it answer out loud."
 
@@ -186,8 +210,8 @@ of small steps. Say that honestly, and say that each one is a single action.
 Every setting below is typed into **Vercel's settings form**: their project, then
 **Settings**, then **Environment Variables**. That form is the only place these values go.
 Tick **Sensitive** on anything that is a key, password or token, and select both
-**Production** and **Preview**. Changes only take effect after a **Redeploy**
-(**Deployments**, the latest one, the three dots, **Redeploy**).
+**Production** and **Preview**. Changes only take effect after a **Redeploy**:
+**Deployments**, the latest one, the three dots (**⋯**), **Redeploy**.
 
 To make a long random value on their own computer, they can run this in any terminal. It
 prints a value for them to copy straight into Vercel. It never needs to come to this chat:
@@ -203,13 +227,20 @@ node -e "console.log(require('crypto').randomBytes(20).toString('hex'))"
 
 Success looks like: `github.com/<their-username>/agent-cockpit` exists.
 
+If there is no **Fork** button or the page says not found: ask them to confirm they are
+signed in to GitHub, and to read you what the page shows. Do not invent another way to copy
+it.
+
+**Builder note:** confirm that `automatedmarketer/agent-cockpit` is public before students
+use this. A private repo cannot be forked by them, and this step would fail for everyone.
+
 ### B2. Put it on Vercel
 
 > "Go to `vercel.com/new`. Sign in with GitHub if it asks. Pick your `agent-cockpit` fork
 > and press **Deploy**. The defaults are right. It takes under a minute."
 
-The first deploy shows an error about not being able to read the repo. Say up front that
-this is expected: B3 fixes it. A free Vercel account is enough.
+Say up front: the first deploy may look empty or say the board is not configured. That is
+expected, and B3 fixes it. A free Vercel account is enough.
 
 ### B3. Tell it which repo to read
 
@@ -217,14 +248,18 @@ In **Environment Variables**, add two:
 
 | Name | Value |
 |---|---|
-| `GITHUB_OWNER` | Their GitHub username |
+| `GITHUB_OWNER` | Their GitHub username, or the organisation's name if the team repo lives in an organisation |
 | `GITHUB_REPO` | Their team repo's name (the one from phase 2, not `agent-cockpit`) |
+
+Success looks like: both appear in the list. Then continue to B4 or B5; the redeploy in B5
+covers them.
 
 ### B4. If the team repo is private (most are)
 
 Most are, because the business brain is in there.
 
-> "Open `github.com/settings/personal-access-tokens/new`. Name it `board-read`. Under
+> "Open `github.com/settings/personal-access-tokens/new`. Name it `board-read`. Next to
+> **Resource owner**, choose the account or organisation that owns the team repo. Under
 > **Repository access** choose **Only select repositories** and pick your team repo. Under
 > **Permissions**, set **Contents** to **Read-only**. Nothing else. Press **Generate
 > token**, copy it, and paste it straight into Vercel as `GITHUB_TOKEN`, ticking
@@ -232,6 +267,9 @@ Most are, because the business brain is in there.
 
 Say why the scope is that narrow: the board only ever reads. A token that can write is a
 token that can be abused, and this one has no reason to have write access.
+
+Success looks like: `GITHUB_TOKEN` appears in the list. If the board's screens come up
+empty after the redeploy in B5, the cause is a typo in B3 or a missing or wrong token here.
 
 ### B5. Make the sign-in
 
@@ -243,7 +281,8 @@ The board is locked: nobody sees it until they sign in. Three more settings:
 | `BOARD_USERNAME` | What they will sign in with. Their email is fine. Capitals and spaces do not matter |
 | `BOARD_PASSWORD` | 12 characters or more. Three or four unrelated words is easy to remember and hard to guess. Tick **Sensitive** |
 
-A password under 12 characters is ignored, and the sign-in screen says so. Then **Redeploy**.
+A password under 12 characters is ignored, and the sign-in screen says so. Then
+**Redeploy**: **Deployments**, the latest one, **⋯**, **Redeploy**.
 
 Success looks like: the deployment shows **Ready**, and opening the address shows a sign-in
 screen, not an error.
@@ -253,11 +292,23 @@ screen, not an error.
 Two settings in their Vercel project that stop strangers from even reaching the sign-in.
 
 1. **Settings**, then **Deployment Protection**, then **Vercel Authentication**, choose
-   **All Deployments**, then **Save**. It is free on every plan. They log in to Vercel once
-   on each device.
+   **All Deployments**, then **Save**. It is free on every plan.
+
+   Why: Vercel's default, Standard Protection, leaves the main address (the one they will
+   bookmark) open to anyone. This closes it. They log in to Vercel once on each device.
+
+   Success looks like: opening the board's address in a private or incognito window asks
+   for a Vercel login.
 2. **Firewall**, then **New Rule**. Name it `login-limit`. Set: **Request Path** equals
    `/api/login`, then **Rate Limit**, **10 requests per 60 seconds**, keyed by **IP**.
    **Save**, then press **Publish**. A rule that is not published does nothing.
+
+   Success looks like: the rule shows **Active**. If it shows as a draft, they have not
+   pressed **Publish** yet.
+
+Do not turn on the board's Mac mailbox mode without checking with the course first. Vercel
+Authentication on All Deployments blocks anything that calls the site without a Vercel
+login, and the mailbox mode is exactly that.
 
 ### B7. Sign in on the phone, and bookmark it now
 
@@ -271,57 +322,80 @@ This happens now, not at the end:
 Success looks like: the Today screen shows their repo's name at the top, and the icon is on
 the phone's home screen.
 
-### B8. Turn on voice
+### B8a. Set the OpenAI spending limit first
 
-First the safety limit, and only then the key. Same as the computer path:
+The limit comes before the key, so the key never exists without one.
 
-> "Go to `platform.openai.com` and make a new **project** called `my-board`. In that
-> project's **Settings**, **Limits**, **Spend**, press **Edit spend limit**, type a
-> monthly amount you are happy to lose, turn on **hard-limit enforcement**, and **Save**.
-> Then open **API keys**, press **Create new secret key**, and paste it into Vercel as
-> `OPENAI_API_KEY`, ticking **Sensitive**. Do not paste it here."
+> "Go to `platform.openai.com` and sign in. Make a new **project** called `my-board`. In
+> that project's **Settings**, then **Limits**, then **Spend**, press **Edit spend limit**.
+> Type a monthly amount you are happy to lose, turn on **hard-limit enforcement**, and
+> press **Save**. If you like, add an alert a little below that amount too, so you hear
+> first."
 
-Then **Redeploy**. Success looks like: a round button at the bottom right of the board.
-Tap it, allow the microphone, and say "What's due today?".
+Success looks like: the limits page shows their amount with the hard limit switched on. An
+alert alone only sends an email and stops nothing; the hard limit is what stops spending.
+If their dashboard has no hard-limit switch, stop here and keep voice off.
 
-If there is no round button: `OPENAI_API_KEY` is missing or was not followed by a redeploy.
+### B8b. Make the key and put it in Vercel
+
+> "In the same project, open **API keys** and press **Create new secret key**. Copy it and
+> paste it straight into Vercel as `OPENAI_API_KEY`, ticking **Sensitive**. Do not paste it
+> here. Then **Redeploy**: **Deployments**, the latest one, **⋯**, **Redeploy**."
+
+Success looks like: a round button at the bottom right of the board. Tap it, allow the
+microphone, and say "What's due today?". If there is no round button, the key is missing
+or the redeploy was skipped.
 
 ### B9. Turn on the order buttons (task-intake first)
 
 Run buttons and voice orders start your routines through Claude Code. Two things are needed:
-a routine called `task-intake`, and two more settings in Vercel.
+a routine called `task-intake`, and two more settings in Vercel. Do the routine first.
 
-1. **Make the `task-intake` routine.** Open `claude.ai/code/routines` and press **New
-   routine**. Name it exactly `task-intake`. For the instructions, read the prompt from
-   the **Orders by voice** section of the `README.md` in **their fork** of `agent-cockpit`
-   (so it always matches their board), and show it to them in a code block to copy. Add
-   their team repo. Keep the **Default** environment. Under **Select a trigger**, choose
-   **API**. Under **Connectors**, remove every one: this routine only changes the repo.
-   Press **Create**.
-2. **Copy its web address and token.** Open the routine, choose **Edit**, and open its
-   **API** trigger. Copy the URL. Press **Generate token** and copy it straight away: it is
-   shown once. Keep both in their password manager (not in a repo file and not in this
-   chat) until step 4, then delete that note.
-3. **A routine for each job** they want a Run button on: made the same way, with that
-   job's own instructions and an **API** trigger. Its workflow file needs `fire: true` in
-   the trigger block, and the slug used below must match `workflows/<slug>.yml`.
-   Start with one job. More can come later.
-4. **Add two settings in Vercel:**
-   - `FIRE_KEY`: a long password they make up, 24 characters or more (the command above
-     makes a good one). Tick **Sensitive**.
-   - `FIRE_TRIGGERS`: one JSON object. Each routine gets its **url and token**, keyed by
-     its name. Tick **Sensitive**. The shape, with placeholders they replace in the Vercel
-     box:
+**Make the `task-intake` routine**, one action at a time:
 
-     ```json
-     {"task-intake": {"url": "PASTE-THE-TASK-INTAKE-URL", "token": "PASTE-THE-TASK-INTAKE-TOKEN"}, "monday-brief": {"url": "PASTE-THE-MONDAY-BRIEF-URL", "token": "PASTE-THE-MONDAY-BRIEF-TOKEN"}}
-     ```
+1. **Open and name it.** Open `claude.ai/code/routines`, press **New routine**, and name it
+   exactly `task-intake`.
+2. **Paste the instructions.** Read the prompt from the `README.md` in **their fork** of
+   `agent-cockpit`: find the **Orders by voice** section and search it for "The
+   task-intake prompt". Print that prompt for them in a code block, exactly as it is, so it
+   always matches their board, and have them copy it into the routine's instructions.
+3. **Add their repo.** Add their team repo to the routine. Keep the **Default**
+   environment.
+4. **Choose the trigger.** Under **Select a trigger**, choose **API**.
+5. **Remove every connector.** Under **Connectors**, remove each one: this routine only
+   changes the repo.
+6. **Create.** Press **Create**. Success looks like: `task-intake` is in their routines
+   list.
 
-     `task-intake` must be in there. It is a routine, not a job; without it Add task, New
-     workflow, Arm, Approve and Pause all fail.
-5. **Redeploy.**
+**Then copy its web address and token.** Open the routine, choose **Edit**, and open its
+**API** trigger. Copy the URL. Press **Generate token** and copy it straight away: it is
+shown once. Keep both in their password manager (not in a repo file and not in this chat)
+until the settings below are saved, then delete that note.
 
-Do not set `PUBLIC_FIRE`. It drops the fire key and is not needed.
+**A routine for each job** they want a Run button on is made the same way, with that
+job's own instructions and an **API** trigger. Its workflow file needs `fire: true` in the
+trigger block, and its name in `FIRE_TRIGGERS` must match `workflows/<slug>.yml`. Start
+with none or one; more can come later.
+
+**Add two settings in Vercel:**
+
+- `FIRE_KEY`: a long password they make up, 24 characters or more (the command above makes
+  a good one). Tick **Sensitive**. Save a copy in their password manager named "fire
+  key": they will type it on each new device.
+- `FIRE_TRIGGERS`: one JSON object. Each routine gets its **url and token**, keyed by its
+  name. Tick **Sensitive**. Start with `task-intake` only, in this shape, replacing the two
+  placeholders inside Vercel's box:
+
+  ```json
+  {"task-intake": {"url": "PASTE-THE-TASK-INTAKE-URL", "token": "PASTE-THE-TASK-INTAKE-TOKEN"}}
+  ```
+
+  Add one entry per job routine, each the same shape, with the job's name as the key.
+  `task-intake` must be in there. It is a routine, not a job; without it Add task, New
+  workflow, Arm, Approve and Pause all fail.
+
+Then **Redeploy**: **Deployments**, the latest one, **⋯**, **Redeploy**. Do not set
+`PUBLIC_FIRE`. It drops the fire key and is not needed.
 
 ### B10. The moment the course was building to
 
@@ -329,8 +403,11 @@ Do not set `PUBLIC_FIRE`. It drops the fire key and is not needed.
 > asks you to confirm. Tap **Yes**. About a minute later, a new task card shows up in your
 > repo. Neither of us typed it."
 
+Warn them first: the first Yes tap on each new phone or computer asks for the fire key.
+They type the "fire key" they saved in their password manager, themselves, into the box
+the board shows. It is asked once per device.
+
 Then, if they made a job routine: "On the Workflows screen, tap **Run** on that job."
-The first time on each device, the board asks for the fire key; they type it themselves.
 
 Wait for them to tell you what they saw. Give it a beat before closing out.
 
@@ -344,7 +421,7 @@ store, and it is a few more clicks:
    private store.
 3. Name it, tick **Production** and **Preview**, press **Create**. If it is not connected
    to the project yet: the store's **Projects** tab, then **Connect to Project**.
-4. **Redeploy.**
+4. **Redeploy**: **Deployments**, the latest one, **⋯**, **Redeploy**.
 
 Success looks like: the Team banner shows a **Personalise** button.
 
@@ -475,7 +552,7 @@ Do not run the finishing steps in the skill file here; those close the install a
 
 | What they saw | What to do |
 |---|---|
-| The board is empty or says it cannot read the repo | The repo name is wrong, or the repo is private and has no token (website), or the folder has no GitHub remote (on their computer). Fix it and try again |
+| The board is empty or says it cannot read the repo | The repo name is wrong, or the repo is private and has no token (website), or `board.json` / the GitHub address is wrong (on their computer). Fix it and try again |
 | Voice button missing or grey | The OpenAI key is missing (website: redeploy after setting it). Grey with a microphone message: the browser is blocking the microphone; the icon left of the address bar changes it |
 | "OpenAI's spending limit for this key is reached" | The hard limit did its job. Raise it on platform.openai.com or wait for next month |
 | "Not sent: ..." in the voice panel | The board refused the order and the rest of the line says why. Read it to them |
@@ -484,7 +561,7 @@ Do not run the finishing steps in the skill file here; those close the install a
 
 | What they saw | What to do |
 |---|---|
-| Deploy succeeded but the screens are empty | `GITHUB_OWNER` or `GITHUB_REPO` is misspelled, or the repo is private with no `GITHUB_TOKEN`. Fix in the Vercel form, redeploy |
+| Empty screens after B5's redeploy: a typo or no token | `GITHUB_OWNER` or `GITHUB_REPO` is misspelled, or the repo is private with no `GITHUB_TOKEN`. Fix in the Vercel form, redeploy |
 | "This dashboard is not configured" | `VIEW_KEY` is not set. Add it and redeploy |
 | "BOARD_PASSWORD is shorter than 12 characters" | Set a longer one and redeploy. Until then the spare key (`VIEW_KEY`) signs in |
 | The username and password never work | Both must be set in Vercel and followed by a redeploy. The spare key always works: tap **Use the spare key instead** |
@@ -503,7 +580,8 @@ Do not run the finishing steps in the skill file here; those close the install a
 
 | What they saw | What to do |
 |---|---|
-| The starter window flashes and closes | Run the starter from a terminal so the message stays; usually Node is missing or too old |
-| The board opens but says it cannot reach the team | The team folder has no GitHub remote, or `git push --dry-run` fails. Fix that first |
-| The runner refuses to start | An `ANTHROPIC_API_KEY` is set on this computer. Remove it from system settings and reopen the terminal |
-| The task never lands | The board must still be open. Check the program window for a message, and read it to them |
+| The starter window flashes and closes | Run the starter from a terminal so the message stays; usually Node is missing or older than 20 |
+| "The link ran out" or the tab was missed | Double-click **Start Board** again for a fresh link (they last 2 minutes) |
+| The board opens but cannot read the team | `board.json` is missing or has the wrong full path, or the team folder has no GitHub address. Fix `board.json`, or `git remote -v` |
+| The board looks but jobs are off | The team repo has not been pushed to GitHub, or this computer cannot push. Run `git push --dry-run` and fix it |
+| An order or task never lands (when ordering exists) | The program window must still be open and show no error. Read any message to them, then check `git push --dry-run` works from the team folder |

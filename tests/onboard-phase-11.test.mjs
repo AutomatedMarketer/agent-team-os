@@ -55,11 +55,14 @@ test('one switch line decides whether the on-my-computer board can be offered', 
     'when the switch is coming-soon the website board must still be offered')
 })
 
-test('Path A has its nine steps in order, with the starter and folder names the plan uses', () => {
+test('Path A has its nine steps in order, with the unbuilt ones marked, with the starter and folder names the plan uses', () => {
   const pathA = section('## Path A')
   const steps = [...pathA.matchAll(/^### A(\d+)\./gm)].map((match) => Number(match[1]))
   assert.deepEqual(steps, [1, 2, 3, 4, 5, 6, 7, 8, 9])
-  for (const name of ['Start Board.command', 'Start Board.bat', 'Agent Board']) {
+  assert.ok((pathA.match(/NOT BUILT YET/g) ?? []).length >= 4, 'the voice and Settings steps must be marked NOT BUILT YET')
+  assert.ok(pathA.includes('board.json'), 'Path A must write board.json')
+  assert.ok(!/private copy|ANTHROPIC_API_KEY/.test(pathA), 'Path A mentions a runner that does not exist')
+  for (const name of ['Start Board.command', 'Start Board.bat', 'the board folder']) {
     assert.ok(pathA.includes(name), `Path A never names "${name}"`)
   }
 })
@@ -111,7 +114,7 @@ test("Nuno's private names never reach a student", async () => {
 
 test('the old setup is gone: no always-on question on the computer path, no PUBLIC_FIRE advice', () => {
   assert.ok(/Skip it entirely on Path A/.test(phase))
-  assert.ok(/Do not set `PUBLIC_FIRE`/.test(phase))
+  assert.ok(/Do not set\s+`PUBLIC_FIRE`/.test(phase))
 })
 
 test('the skill file tells the same story as the phase', () => {
