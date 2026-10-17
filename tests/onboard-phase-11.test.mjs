@@ -59,7 +59,9 @@ test('Path A has its nine steps in order, with the unbuilt ones marked, with the
   const pathA = section('## Path A')
   const steps = [...pathA.matchAll(/^### A(\d+)\./gm)].map((match) => Number(match[1]))
   assert.deepEqual(steps, [1, 2, 3, 4, 5, 6, 7, 8, 9])
-  assert.ok((pathA.match(/NOT BUILT YET/g) ?? []).length >= 4, 'the voice and Settings steps must be marked NOT BUILT YET')
+  assert.ok(pathA.includes('Giving it an order — NOT BUILT YET'), 'the order half of A8 must be marked')
+  assert.ok(!pathA.slice(pathA.indexOf('### A1.'), pathA.indexOf('### A8.')).includes('NOT BUILT YET'), 'A1 to A7 exist now')
+  assert.ok(!/Voice Studio|Ollama/.test(pathA), 'the course path never teaches local voice')
   assert.ok(pathA.includes('board.json'), 'Path A must write board.json')
   assert.ok(!/private copy|ANTHROPIC_API_KEY/.test(pathA), 'Path A mentions a runner that does not exist')
   for (const name of ['Start Board.command', 'Start Board.bat', 'the board folder']) {

@@ -1,8 +1,9 @@
 # Phase 11 — Oversight
 
 **Time:** about 25 minutes on their computer, 60 to 90 minutes as a website
-**Ends with:** a board that shows their real team, that they have talked to, and one task
-ordered by voice that landed in their repo as a commit nobody typed.
+**Ends with:** a board that shows their real team and that they have talked to. On the
+website path, also one task ordered by voice that landed in their repo as a commit nobody
+typed.
 
 This is stage 5 of 6. The team already works; this phase gives them a board to watch it
 and give it orders. People are lost more often by not finding their way back in than by
@@ -20,8 +21,10 @@ board-this-computer: coming-soon
 ```
 
 - `coming-soon` — the board that runs on the student's computer is **coming soon, not built
-  yet**. If they pick it, say so plainly and offer the website board (see "The question").
-  Do not invent an install command, a download link or a file. Nothing in Path A can be run yet.
+  yet**. The board, its Settings key box and spoken questions exist; ordering tasks from it
+  does not, and nobody has yet double-clicked the starter on a real Mac and a real Windows
+  PC. If they pick it, say so plainly and offer the website board (see "The question").
+  Do not invent an install command, a download link or a file.
 - `ready` — Path A is live. Before you flip the line, read every screen name and file name in
   Path A against the running board and fix the words that differ.
 
@@ -51,7 +54,7 @@ Ask this on its own, then wait. Do not run any step before they answer.
 
 > "Where do you want your board to live?
 >
-> **On my computer** — the fewest steps, about 8. It runs on this Mac or Windows PC and
+> **On my computer** — the fewest steps, about 9 short ones. It runs on this Mac or Windows PC and
 > only while you have it open. Private to this computer. No phone access.
 >
 > **Website** — it lives at a web address you own, so it works from your phone and from any
@@ -71,10 +74,10 @@ Write their choice in `.agent-team/onboarding-state.md` as `board: this-computer
 
 ## Path A — On my computer
 
-**Only when the switch above says `ready`.** The steps below are the plan for that board.
-They are not yet tried on a real Windows PC or Mac. Steps marked **NOT BUILT YET** need
-parts of the board that do not exist; the switch stays `coming-soon` until every one of them
-does.
+**Only when the switch above says `ready`.** Steps A1 to A7 and the question half of A8 exist
+in the board now. The order half of A8 does not, and none of it has been tried on a real
+Windows PC or Mac. The one step marked **NOT BUILT YET** stays that way, and the switch stays
+`coming-soon`, until it exists and a real double-click test has passed.
 
 The board is a folder on their computer with a starter file in it (`Start Board.command` on
 a Mac, `Start Board.bat` on Windows). It reads their team folder, which must be a copy of
@@ -104,6 +107,10 @@ On a yes, download the board into a new folder next to their team folder with `g
 (never a zip download: a zip carries a "came from the internet" mark that triggers extra
 warnings). Report in one sentence what was downloaded and where.
 
+Success looks like: the board folder exists and has `Start Board` in it. If the clone
+fails, ask them to read you the error and fix what it says; do not try another way to get
+the files.
+
 **Builder note:** the exact clone address and any installer command are filled in here when
 the board ships. Until then, do not guess one.
 
@@ -113,11 +120,12 @@ Write a file called `board.json` next to `Start Board`, holding the full path of
 folder. Skip this only if the board folder sits inside the team folder.
 
 ```text
-{"teamFolder": "FULL-PATH-TO-THEIR-TEAM-FOLDER"}
+{"teamFolder": "C:/Users/jane/my-agent-team"}
 ```
 
-Use the real full path on this computer, such as `C:\Users\jane\my-agent-team` on Windows.
-Read the file back and confirm the path exists. Success looks like: you can list the team
+Use the real full path on this computer. It must be valid JSON: on Windows write forward
+slashes as above (or doubled backslashes), never single backslashes. Read the file back
+with a JSON parse and confirm the path exists. Success looks like: you can list the team
 folder's contents from that path.
 
 ### A4. They start the board
@@ -132,18 +140,15 @@ screen.
 - The browser opens with a one-time link that works for **2 minutes**. If they missed the
   tab or it says the link ran out, they double-click **Start Board** again for a fresh one.
 - Closing the program window stops the board. That is on purpose.
-- You may see a warning on a first start. This is **untested on real machines**, so say it
-  calmly: "A warning here is expected; this file came from your own download." On Windows:
-  **More info**, then **Run anyway**. On a Mac: **System Settings**, **Privacy & Security**,
-  then **Open Anyway** for that one file. Never tell them to switch off a security setting,
-  and if what they see does not match this, ask them to read you the message.
+- No warning is expected, because a `git clone` does not carry the downloaded-file mark.
+  If one appears anyway, ask them to read you the message before doing anything. Only as a
+  fallback, and **untested on real machines**: on Windows, **More info**, then **Run
+  anyway**; on a Mac, **System Settings**, **Privacy & Security**, then **Open Anyway** for
+  that one file. Never tell them to switch off a security setting.
 - A window flashes and closes: run the starter from a terminal so the message stays on
   screen. Usually Node is missing or older than 20.
 
-### A5. They make an OpenAI project with a monthly limit — NOT BUILT YET
-
-Voice needs this, and the voice engine is not in the board yet. **Builder note:** do not run
-this step until the Settings key box and voice exist.
+### A5. They make an OpenAI project with a monthly limit
 
 Say why first: voice is billed by OpenAI, separately from their Claude or ChatGPT plan.
 
@@ -155,32 +160,43 @@ Say why first: voice is billed by OpenAI, separately from their Claude or ChatGP
 Success looks like: the limits page shows their amount with the hard limit on. An alert
 alone only sends an email and stops nothing.
 
-### A6. They make an API key and put it in the board's Settings box — NOT BUILT YET
-
-**Builder note:** the board has no Settings box yet. Do not run this step until it exists.
+### A6. They make an API key and put it in the board's Settings
 
 > "In that project, open **API keys** and press **Create new secret key**. Copy it. Do not
-> paste it here. In the board, open **Settings**, paste the key into the OpenAI box, and
-> press **Save**. It is stored on this computer only, and the board will never show it
-> again."
+> paste it here. In the board, click **Settings**. In the row called **OpenAI key (for
+> voice)**, paste the key into the box that says "Paste the key here", then click
+> **Save**."
 
-### A7. They allow the microphone — NOT BUILT YET
+Success looks like: the row now says "saved · ends in ••••" and the last four characters.
+Then they click **Test this key** and it says "This key works." The page then says "Saved.
+Reload this page to turn voice on."
 
-**Builder note:** needs the voice button, which is not in this board yet.
+Say it plainly: the key is stored on this computer only, and the board never shows it
+again.
 
-> "Tap the round button at the bottom right. Your browser asks to use the microphone.
-> Press **Allow**."
+If Save says the key "does not look like" an OpenAI key, they pasted the wrong key. An
+Anthropic key (starting `sk-ant-`) is refused on purpose. Make a new OpenAI key and try
+again.
+
+There is an advanced Local voice option in Settings. Skip it.
+
+### A7. They allow the microphone
+
+> "Click **Reload the board** to turn voice on. Then click the orb that says **Talk to**
+> and your assistant's name. Your browser asks to use the microphone. Press **Allow**."
 
 If they pressed Block by mistake: the icon left of the address bar lets them change it,
-then tap the button again.
+then click the orb again.
 
-### A8. They ask it a question, then give it an order — NOT BUILT YET
-
-**Builder note:** needs voice and ordering tasks, neither built yet.
+### A8. They ask it a question, then give it an order
 
 > "Say: **What's due today?** You should hear it answer out loud."
 
-Then:
+That is the end of the working part: success is that they talked to it and heard an answer.
+
+**Giving it an order — NOT BUILT YET.** **Builder note:** starting jobs from the board is
+not set up on a student's computer yet, so skip this half for now and say orders come in a
+later board update. When it exists:
 
 > "Now say: **Add a task: test the board.** A card appears asking you to confirm. Press
 > **Yes**. About a minute later, a new task card shows up in your repo. Neither of us typed
@@ -520,8 +536,8 @@ Prices are the person's own words, so write them as given. Never look a price up
 
 - The board shows their real team: their agents and workflows are on screen
 - They talked to it and heard an answer
-- They ordered a task by voice, pressed Yes, and a task card landed in their repo as a
-  commit they did not type
+- Website only: they ordered a task by voice, pressed Yes, and a task card landed in their
+  repo as a commit they did not type
 - Website only: the icon is on their phone's home screen
 - The choice is recorded as `board: this-computer` or `board: website`; U1 (website only) is
   recorded; U2 is recorded as `usage-tap: installed` or `usage-tap: declined`; U3 is
@@ -555,6 +571,8 @@ Do not run the finishing steps in the skill file here; those close the install a
 |---|---|
 | The board is empty or says it cannot read the repo | The repo name is wrong, or the repo is private and has no token (website), or `board.json` / the GitHub address is wrong (on their computer). Fix it and try again |
 | Voice button missing or grey | The OpenAI key is missing (website: redeploy after setting it). Grey with a microphone message: the browser is blocking the microphone; the icon left of the address bar changes it |
+| "Saved. Reload this page to turn voice on." | The key is saved. Click **Reload the board** |
+| "Needs an OpenAI key: paste one in Settings" | The key was not saved. Open **Settings** and paste it again |
 | "OpenAI's spending limit for this key is reached" | The hard limit did its job. Raise it on platform.openai.com or wait for next month |
 | "Not sent: ..." in the voice panel | The board refused the order and the rest of the line says why. Read it to them |
 
@@ -569,7 +587,7 @@ Do not run the finishing steps in the skill file here; those close the install a
 | "Too many wrong tries from here" | Wait 15 minutes, or use the spare key from another network |
 | "Reload to sign in" | Their Vercel login on this device ran out. Tap Reload and log in to Vercel again |
 | "Fire is not configured" when tapping Run or ordering | `FIRE_KEY` or `FIRE_TRIGGERS` is unset. Set both and redeploy |
-| "FIRE_TRIGGERS is in the old format" | Each routine needs its url and its token, as in B9 step 4. Fix the shape and redeploy |
+| "FIRE_TRIGGERS is in the old format" | Each routine needs its url and its token, as in the `FIRE_TRIGGERS` shape in B9. Fix the shape and redeploy |
 | "No task-intake routine is registered" | `task-intake` is missing from `FIRE_TRIGGERS`. Add it and redeploy |
 | "The token ... was refused" | That token was regenerated or mistyped. On the routine's API trigger press Regenerate, put the new token in `FIRE_TRIGGERS`, redeploy |
 | "...does not have trigger.fire: true" | Add `fire: true` to that job's trigger block, commit and push |
@@ -585,4 +603,5 @@ Do not run the finishing steps in the skill file here; those close the install a
 | "The link ran out" or the tab was missed | Double-click **Start Board** again for a fresh link (they last 2 minutes) |
 | The board opens but cannot read the team | `board.json` is missing or has the wrong full path, or the team folder has no GitHub address. Fix `board.json`, or `git remote -v` |
 | The board looks but jobs are off | The team repo has not been pushed to GitHub, or this computer cannot push. Run `git push --dry-run` and fix it |
-| An order or task never lands (when ordering exists) | The program window must still be open and show no error. Read any message to them, then check `git push --dry-run` works from the team folder |
+| "Starting jobs from the board is not set up on this computer yet" | Expected for now. Orders come in a later board update. Voice questions still work |
+| An order or task never lands (once ordering exists) | The program window must still be open and show no error. Read any message to them, then check `git push --dry-run` works from the team folder |
