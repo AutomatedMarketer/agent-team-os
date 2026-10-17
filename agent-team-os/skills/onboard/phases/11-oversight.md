@@ -572,7 +572,7 @@ Do not run the finishing steps in the skill file here; those close the install a
 | The board is empty or says it cannot read the repo | The repo name is wrong, or the repo is private and has no token (website), or `board.json` / the GitHub address is wrong (on their computer). Fix it and try again |
 | Voice button missing or grey | The OpenAI key is missing (website: redeploy after setting it). Grey with a microphone message: the browser is blocking the microphone; the icon left of the address bar changes it |
 | "Saved. Reload this page to turn voice on." | The key is saved. Click **Reload the board** |
-| "Needs an OpenAI key: paste one in Settings" | The key was not saved. Open **Settings** and paste it again |
+| "Talking to the board needs an OpenAI key: paste one in Settings" | The key was not saved. Open **Settings** and paste it again |
 | "OpenAI's spending limit for this key is reached" | The hard limit did its job. Raise it on platform.openai.com or wait for next month |
 | "Not sent: ..." in the voice panel | The board refused the order and the rest of the line says why. Read it to them |
 
