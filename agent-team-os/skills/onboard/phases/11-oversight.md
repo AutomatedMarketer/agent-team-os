@@ -21,9 +21,9 @@ board-this-computer: coming-soon
 ```
 
 - `coming-soon` — the board that runs on the student's computer is **coming soon, not built
-  yet**. The board, its Settings key box and spoken questions exist; ordering tasks from it
-  does not, and nobody has yet double-clicked the starter on a real Mac and a real Windows
-  PC. If they pick it, say so plainly and offer the website board (see "The question").
+  yet** for students. The board, its Settings key box, spoken questions and orders all work
+  in a test on a real Windows PC, but nobody has yet double-clicked the starter on a real
+  Mac. If they pick it, say so plainly and offer the website board (see "The question").
   Do not invent an install command, a download link or a file.
 - `ready` — Path A is live. Before you flip the line, read every screen name and file name in
   Path A against the running board and fix the words that differ.
@@ -74,10 +74,9 @@ Write their choice in `.agent-team/onboarding-state.md` as `board: this-computer
 
 ## Path A — On my computer
 
-**Only when the switch above says `ready`.** Steps A1 to A7 and the question half of A8 exist
-in the board now. The order half of A8 does not, and none of it has been tried on a real
-Windows PC or Mac. The one step marked **NOT BUILT YET** stays that way, and the switch stays
-`coming-soon`, until it exists and a real double-click test has passed.
+**Only when the switch above says `ready`.** Every step exists in the board now, and the
+whole path was run on a real Windows PC. It has not been tried on a real Mac. The switch stays
+`coming-soon` until a real Mac double-click test has passed.
 
 The board is a folder on their computer with a starter file in it (`Start Board.command` on
 a Mac, `Start Board.bat` on Windows). It reads their team folder, which must be a copy of
@@ -111,6 +110,25 @@ Success looks like: the board folder exists and has `Start Board` in it. If the 
 fails, ask them to read you the error and fix what it says; do not try another way to get
 the files.
 
+**Then put the runner code next to the board.** This is what lets the board's **Run** buttons
+and voice orders work. Without it the board shows "Jobs are off: the runner code is not
+installed next to the board". It is a second copy of their own team repo, in a folder called
+`runner-code` inside the board folder. Get the team repo's address, then clone it. The same
+two lines work on Windows (PowerShell) and Mac (Terminal). Use the real full paths:
+
+```text
+git -C "<team folder>" remote get-url origin
+git clone <that address> "<board folder>/runner-code"
+```
+
+Say it plainly: "This is a second copy of your team's files. It is the part that does the
+work when you give the board an order. It never changes by itself."
+
+Success looks like: `<board folder>/runner-code/scripts/mailbox-runner.mjs` exists. The
+`runner-code` folder must be inside the board folder and never inside the team folder. If the
+clone asks for a login or says the address is wrong, fix the team folder's GitHub address first
+(a plain `https://github.com/...` address with no user name or token in it).
+
 **Builder note:** the exact clone address and any installer command are filled in here when
 the board ships. Until then, do not guess one.
 
@@ -138,7 +156,8 @@ Success looks like: a browser tab opens with the board and their team's name on 
 screen.
 
 - The browser opens with a one-time link that works for **2 minutes**. If they missed the
-  tab or it says the link ran out, they double-click **Start Board** again for a fresh one.
+  tab or it says the link ran out ("This link was already used or has run out"), they
+  double-click **Start Board** again for a fresh one.
 - Closing the program window stops the board. That is on purpose.
 - No warning is expected, because a `git clone` does not carry the downloaded-file mark.
   If one appears anyway, ask them to read you the message before doing anything. Only as a
@@ -146,7 +165,40 @@ screen.
   anyway**; on a Mac, **System Settings**, **Privacy & Security**, then **Open Anyway** for
   that one file. Never tell them to switch off a security setting.
 - A window flashes and closes: run the starter from a terminal so the message stays on
-  screen. Usually Node is missing or older than 20.
+  screen. Usually Node is missing or older than 20. **The file name has a space in it, so the
+  whole path goes in quotes.** Typing just `Start Board.bat` does not work: Windows shows
+  "Windows cannot find 'Board.bat'" and the window hangs. These work (use the real board
+  folder):
+
+```text
+Windows, PowerShell:  & "C:\path\to\board\Start Board.bat"
+Windows, cmd:         "C:\path\to\board\Start Board.bat"
+Mac, Terminal:        "/path/to/board/Start Board.command"
+```
+
+**Turn the jobs on (Claude does this; it takes a few minutes).** The first start made the
+runner's files. Now prove the runner is safe before it does any work:
+
+1. Ask them to close the black program window. That stops the board.
+2. Run the runner's self-test. It uses a little of their Claude plan and tests that Claude
+   cannot touch anything outside its own work folder. Use the real board folder.
+   Windows, PowerShell:
+
+```text
+node "<board folder>\runner-code\scripts\mailbox-runner.mjs" --selftest --state-dir "$env:LOCALAPPDATA\Agent Board\state\runner" --work-dir "$env:LOCALAPPDATA\Agent Board\work" --env-file "$env:LOCALAPPDATA\Agent Board\state\runner\runner.env"
+```
+
+   Windows, cmd: the same with `%LOCALAPPDATA%` instead of `$env:LOCALAPPDATA`. Mac, Terminal:
+
+```text
+node "<board folder>/runner-code/scripts/mailbox-runner.mjs" --selftest --state-dir "$HOME/Library/Application Support/Agent Board/state/runner" --work-dir "$HOME/Library/Application Support/Agent Board/work" --env-file "$HOME/Library/Application Support/Agent Board/state/runner/runner.env"
+```
+
+3. A pass ends with "Self-test passed: ... and jobs may run." A fail says "Self-test FAILED:"
+   and why. Read the lines to them and fix what they say. Do not turn any safety setting off.
+   If it fails the same way twice, stop and tell Nuno's team (it is a bug, not their mistake).
+4. Ask them to double-click **Start Board** again. The window should say "Jobs are on". If it
+   still says "Jobs are off", the line after it says why.
 
 ### A5. They make an OpenAI project with a monthly limit
 
@@ -194,13 +246,16 @@ then click the orb again.
 
 That is the end of the working part: success is that they talked to it and heard an answer.
 
-**Giving it an order — NOT BUILT YET.** **Builder note:** starting jobs from the board is
-not set up on a student's computer yet, so skip this half for now and say orders come in a
-later board update. When it exists:
+**Giving it an order.** This needs the jobs to be on (the runner code in A2 and the
+self-test in A4). If the board says jobs are off, go back and finish those first.
 
 > "Now say: **Add a task: test the board.** A card appears asking you to confirm. Press
-> **Yes**. About a minute later, a new task card shows up in your repo. Neither of us typed
-> it. This is the moment the whole course has been building to."
+> **Yes**. The board says it started in a moment (about 15 to 30 seconds), then the new task
+> card shows up in your repo when it finishes. Neither of us typed it. This is the moment
+> the whole course has been building to."
+
+Do this at least 2 minutes after the first start. The runner refuses an order sent in its first
+2 minutes. (On the website path, orders can take up to 5 minutes. Not here.)
 
 Wait for them to tell you what they saw. Give it a beat before moving on.
 
@@ -599,9 +654,13 @@ Do not run the finishing steps in the skill file here; those close the install a
 
 | What they saw | What to do |
 |---|---|
-| The starter window flashes and closes | Run the starter from a terminal so the message stays; usually Node is missing or older than 20 |
-| "The link ran out" or the tab was missed | Double-click **Start Board** again for a fresh link (they last 2 minutes) |
+| The starter window flashes and closes | Run the starter from a terminal so the message stays; usually Node is missing or older than 20. The path must be in quotes: `& "C:\path\to\board\Start Board.bat"` in PowerShell, `"C:\path\to\board\Start Board.bat"` in cmd, `"/path/to/board/Start Board.command"` on a Mac. Typing `Start Board.bat` without the folder gives "Windows cannot find 'Board.bat'" |
+| "This link was already used or has run out" or the tab was missed | Double-click **Start Board** again for a fresh link (they last 2 minutes) |
+| "Jobs are off: the runner code is not installed next to the board" | The `runner-code` folder is missing from the board folder. Do the runner-code step in A2, close the program window, and double-click **Start Board** again |
+| A run is refused as "not ready", or the self-test never passed | Close the program window and run the self-test in A4. It must say "Self-test passed". Run it again after any Claude Code update |
+| An order says it "did not pass its checks" right after the very first start | The runner refuses orders in its first 2 minutes. Wait 2 minutes and send it again |
+| An antivirus box appears, or git fails once and works on the second try | Read the message to them before doing anything. Never tell them to switch the antivirus off. (A Norton 360 PC ran the board, git and a real order without trouble in testing) |
 | The board opens but cannot read the team | `board.json` is missing or has the wrong full path, or the team folder has no GitHub address. Fix `board.json`, or `git remote -v` |
 | The board looks but jobs are off | The team repo has not been pushed to GitHub, or this computer cannot push. Run `git push --dry-run` and fix it |
-| "Starting jobs from the board is not set up on this computer yet" | Expected for now. Orders come in a later board update. Voice questions still work |
-| An order or task never lands (once ordering exists) | The program window must still be open and show no error. Read any message to them, then check `git push --dry-run` works from the team folder |
+| "Starting jobs from the board is not set up on this computer yet" | The jobs are not on. Do the runner-code step in A2 and the self-test in A4. Voice questions work without them |
+| An order or task never lands | The program window must still be open and show no error. Read any message to them, then check `git push --dry-run` works from the team folder |
